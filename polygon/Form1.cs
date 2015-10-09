@@ -37,30 +37,10 @@ namespace polygon
             switch (currentPolygon)
             {
                 case 1:
-                    int countPoints = a.pointCollection.Count;
-                    Boolean badPoint = false;
-                    if(countPoints >= 2)
-                    {
-                        Point[] points = a.pointCollection.ToArray();
-                        Line newLine = new Line(points[countPoints-1], newPoint);
-                        for(int i = 0; i < a.pointCollection.Count-1; i++)
-                        {
-                            if(newLine.intersect(points[i], points[i+1]))
-                            {
-                                badPoint = true;
-                                break;
-                            }
-                        }
-                    }
-                    if (!badPoint)
-                    {
-                        a.addPoint(newPoint);
+                    if (a.addPoint(newPoint))
+                    {                        
                         tbPointsPolygonA.Text += (Environment.NewLine + newPoint.ToString());
                         g.FillRectangle(Brushes.Black, newPoint.X, newPoint.Y, 1, 1);   //рисуем выбранную пользователем точку
-                    }
-                    else
-                    {
-                        System.Windows.Forms.MessageBox.Show("Данная точка даёт самопересечение!");
                     }
                     break;
                 case 2:
@@ -80,6 +60,9 @@ namespace polygon
             g.DrawPolygon(Pens.Red, a.pointCollection.ToArray());
         }
 
+        /// <summary>
+        /// Закрашивание полигонов по активации чекбокса на форме
+        /// </summary>
         private void cbFillPolygon_CheckedChanged(object sender, EventArgs e)
         {
             if (cbFillPolygon.Checked)

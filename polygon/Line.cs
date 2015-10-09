@@ -52,7 +52,7 @@ namespace polygon
         bool intersect_1 (int a, int b, int c, int d) {
 	        if (a > b)  Swap (ref a, ref b);
 	        if (c > d)  Swap (ref c, ref d);
-	      return (Math.Max(a,c) < Math.Min(b,d)) || (a==b && b==c && c==d);
+	      return (Math.Max(a,c) <= Math.Min(b,d));
         }
 
         public bool intresect(Line line)

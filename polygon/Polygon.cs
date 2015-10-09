@@ -28,9 +28,41 @@ namespace polygon
 
         /// <summary>Данный метод добавляет точку к полигону</summary>
         /// <param name="_point">Точка, которая добавляется к полигону</param>
-        public void addPoint(Point _point)
+        public bool addPoint(Point _point)
         {
-            pointCollection.Add(_point);
+            Boolean success = false;
+            if (!pointCollection.Contains(_point))  //новой точки ещё нет в полигоне
+            {
+                int countPoints = pointCollection.Count;
+                Boolean badPoint = false;   //даёт ли новая точка самопересечение полигона
+                if (countPoints > 2)
+                {
+                    Point[] points = pointCollection.ToArray();
+                    Line newLine = new Line(points[countPoints - 1], _point);
+                    for (int i = 0; i < pointCollection.Count - 2; i++)
+                    {
+                        if (newLine.intersect(points[i], points[i + 1]))
+                        {
+                            badPoint = true;
+                            break;
+                        }
+                    }
+                }
+                if (!badPoint)
+                {
+                    pointCollection.Add(_point);
+                    success = true;
+                }
+                else
+                {
+                    System.Windows.Forms.MessageBox.Show("Данная точка даёт самопересечение!");
+                }
+            }
+            else
+            {
+                System.Windows.Forms.MessageBox.Show("Полигон уже содержит такую точку!");
+            }
+            return success;
         }
     }
 }
