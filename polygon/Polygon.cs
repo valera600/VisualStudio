@@ -33,29 +33,11 @@ namespace polygon
             Boolean success = false;
             if (!pointCollection.Contains(_point))  //новой точки ещё нет в полигоне
             {
-                int countPoints = pointCollection.Count;
-                Boolean badPoint = false;   //даёт ли новая точка самопересечение полигона
-                if (countPoints > 2)
-                {
-                    Point[] points = pointCollection.ToArray();
-                    Line newLine = new Line(points[countPoints - 1], _point);
-                    for (int i = 0; i < pointCollection.Count - 2; i++)
-                    {
-                        if (newLine.intersect(points[i], points[i + 1]))
-                        {
-                            badPoint = true;
-                            break;
-                        }
-                    }
-                }
-                if (!badPoint)
+                
+                if (!isBadPoint(_point))
                 {
                     pointCollection.Add(_point);
                     success = true;
-                }
-                else
-                {
-                    System.Windows.Forms.MessageBox.Show("Данная точка даёт самопересечение!");
                 }
             }
             else
@@ -63,6 +45,54 @@ namespace polygon
                 System.Windows.Forms.MessageBox.Show("Полигон уже содержит такую точку!");
             }
             return success;
+        }
+
+        /// <summary>
+        /// Данный метод проверяет даст ли точка самопересечение в полигоне
+        /// </summary>
+        /// <param name="_point"></param>
+        /// <returns>True - точка даёт самопересечение, false - нет</returns>
+        public bool isBadPoint(Point _point)
+        {
+            int countPoints = pointCollection.Count;
+            Boolean badPoint = false;   //даёт ли точка самопересечение полигона
+            if (countPoints > 2)
+            {
+                Point[] points = pointCollection.ToArray();
+                Line newLine = new Line(points[countPoints - 1], _point);
+                for (int i = 0; i < pointCollection.Count - 2; i++)
+                {
+                    if (newLine.intersect(points[i], points[i + 1]))
+                    {
+                        badPoint = true;
+                        break;
+                    }
+                }
+                if(badPoint)
+                    System.Windows.Forms.MessageBox.Show("Данная точка даёт самопересечение!");
+            }
+            return badPoint;
+        }
+
+        /// <summary>
+        /// Возвращает последнюю точку полигона
+        /// </summary>
+        /// <returns>Последнюю точку, если она есть или точку {0;0}</returns>
+        public Point getLastPoint()
+        {
+            Point point = new Point(0,0);
+            if(pointCollection.Count > 0)
+                point = pointCollection.ToArray()[pointCollection.Count - 1];
+            return point;
+        }
+
+        /// <summary>
+        /// Возвращает количество точек в полигоне
+        /// </summary>
+        /// <returns>Количество точек (int)</returns>
+        public int getCountPoints()
+        {
+            return pointCollection.Count;
         }
     }
 }

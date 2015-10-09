@@ -34,13 +34,21 @@ namespace polygon
         private void workSpace_MouseUp(object sender, MouseEventArgs e)
         {
             Point newPoint = new Point(e.X, e.Y);  //точка, которую добавил пользователь
+            Point lastPoint = a.getLastPoint();
             switch (currentPolygon)
             {
                 case 1:
                     if (a.addPoint(newPoint))
-                    {                        
+                    {                     
                         tbPointsPolygonA.Text += (Environment.NewLine + newPoint.ToString());
-                        g.FillRectangle(Brushes.Black, newPoint.X, newPoint.Y, 1, 1);   //рисуем выбранную пользователем точку
+                        if (a.getCountPoints() > 1)
+                        {
+                            g.DrawLine(Pens.Black, lastPoint, newPoint);    //рисуем отрезок к новой точке
+                        }
+                        else
+                        {
+                            g.FillRectangle(Brushes.Black, newPoint.X, newPoint.Y, 1, 1);   //рисуем первую точку
+                        }
                     }
                     break;
                 case 2:
@@ -70,7 +78,7 @@ namespace polygon
             else
             {
                 g.FillPolygon(Brushes.White, a.pointCollection.ToArray());
-                g.DrawPolygon(Pens.Red, a.pointCollection.ToArray());
+                g.DrawPolygon(Pens.Black, a.pointCollection.ToArray());
             }
         }
 
