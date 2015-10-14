@@ -39,6 +39,8 @@ namespace polygon
                     pointCollection.Add(_point);
                     success = true;
                 }
+                else
+                    System.Windows.Forms.MessageBox.Show("Данная точка даёт самопересечение!");
             }
             else
             {
@@ -68,8 +70,6 @@ namespace polygon
                         break;
                     }
                 }
-                if(badPoint)
-                    System.Windows.Forms.MessageBox.Show("Данная точка даёт самопересечение!");
             }
             return badPoint;
         }
@@ -83,6 +83,18 @@ namespace polygon
             Point point = new Point(0,0);
             if(pointCollection.Count > 0)
                 point = pointCollection.ToArray()[pointCollection.Count - 1];
+            return point;
+        }
+
+        /// <summary>
+        /// Возвращает первую точку полигона
+        /// </summary>
+        /// <returns>Первую точку, если она есть или точку {0;0}</returns>
+        public Point getFirstPoint()
+        {
+            Point point = new Point(0,0);
+            if(pointCollection.Count > 0)
+                point = pointCollection.ToArray()[0];
             return point;
         }
 

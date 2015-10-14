@@ -61,10 +61,15 @@ namespace polygon
         }
 
         public bool intersect (Point c, Point d) {
-	        return intersect_1 (a.X, b.X, c.X, d.X)
+            Boolean intersect;
+            if (a == c || a == d || b == c || b == d)
+                intersect = false;
+	        else 
+                intersect = intersect_1 (a.X, b.X, c.X, d.X)
 		&& intersect_1 (a.Y, b.Y, c.Y, d.Y)
 		&& area(a,b,c) * area(a,b,d) <= 0
 		&& area(c,d,a) * area(c,d,b) <= 0;
+            return intersect;
         }
     }
 }

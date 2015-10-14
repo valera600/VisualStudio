@@ -59,13 +59,24 @@ namespace polygon
             
         }
 
+        /// <summary>
+        /// Пользователь закончил рисование полигона
+        /// </summary>
         private void btStopPolygonA_Click(object sender, EventArgs e)
         {
-            btStartPolygonA.Enabled = true;    //включаем кнопку запуска рисования полигона А
-            btStopPolygonA.Enabled = false;  //выключаем кнопку остановки рисования полигона А
-            workSpace.Enabled = false;   //выключаем область для рисования
-            currentPolygon = 0; //на данный момент ни какой полигон не рисуется
-            g.DrawPolygon(Pens.Red, a.pointCollection.ToArray());
+            //текущий полигон!
+            if (!a.isBadPoint(a.getFirstPoint()))
+            {
+                btStartPolygonA.Enabled = true;    //включаем кнопку запуска рисования полигона А
+                btStopPolygonA.Enabled = false;  //выключаем кнопку остановки рисования полигона А
+                workSpace.Enabled = false;   //выключаем область для рисования         
+                g.DrawPolygon(Pens.Red, a.pointCollection.ToArray());
+                currentPolygon = 0; //на данный момент ни какой полигон не рисуется
+            }
+            else
+            {
+                System.Windows.Forms.MessageBox.Show("Отрезок из последней точки в первую даёт самопересечение!");
+            }
         }
 
         /// <summary>
