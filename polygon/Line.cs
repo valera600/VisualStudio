@@ -55,7 +55,7 @@ namespace polygon
 	      return (Math.Max(a,c) <= Math.Min(b,d));
         }
 
-        public bool intresect(Line line)
+        public bool intersect(Line line)
         {
             return intersect(line.a, line.b);
         }
@@ -70,6 +70,49 @@ namespace polygon
 		&& area(a,b,c) * area(a,b,d) <= 0
 		&& area(c,d,a) * area(c,d,b) <= 0;
             return intersect;
+        }
+
+        public Point getIntersectPoint(Line line)
+        {
+            Point intersectPoint = new Point();
+            if(this.intersect(line))
+            {
+                Point a = this.a;
+                Point b = this.b;
+                Point c = line.a;
+                Point d = line.b;
+                double denominator = ((d.Y - c.Y) * (b.X - a.X)) - ((d.X - c.X) * (b.Y - a.Y));
+                double Ua = (((d.X - c.X) * (a.Y - c.Y)) - ((d.Y - c.Y) * (a.X - c.X))) / (denominator);
+                double Ub = (((b.X - a.X) * (a.Y - c.Y)) - ((b.Y - a.Y) * (a.X - c.X))) / denominator;
+                if(Ua >= 0 && Ua <= 1 && Ub >= 0 && Ub <= 1)
+                {
+                    double x = a.X + Ua * (b.X - a.X);
+                    double y = a.Y + Ua * (b.Y - a.Y);
+                    intersectPoint.X = Convert.ToInt32(x);
+                    intersectPoint.Y = Convert.ToInt32(y);
+                }
+            }
+            return intersectPoint;
+        }
+
+        public bool hasPoint(Point point)
+        {
+            bool hasPoint;
+            double eps = 0.05;
+            double p = (point.X - this.b.X) / Convert.ToDouble((this.a.X - this.b.X));
+            if(p >= 0 && p <= 1)
+            {
+                double p2 = ((point.Y - this.b.Y) / Convert.ToDouble((this.a.Y - this.b.Y)));
+                if (p >= (p2-eps) && p <= (p2+eps))
+                    hasPoint = true;
+                else
+                    hasPoint = false;
+            }
+            else
+            {
+                hasPoint = false;
+            }
+            return hasPoint;
         }
     }
 }

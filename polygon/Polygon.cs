@@ -106,5 +106,10 @@ namespace polygon
         {
             return pointCollection.Count;
         }
+
+        public void Clear()
+        {
+            this.pointCollection.Clear();
+        }
     }
 }
