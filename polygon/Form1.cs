@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
@@ -77,6 +78,8 @@ namespace polygon
             else
             {
                 MessageBox.Show("На данный момент не активировано рисование полигонов!");
+                Line line = new Line(new Point(124, 98), new Point(123, 228));
+                line.hasPoint(new Point(124, 147));
             }
         }
 
@@ -107,18 +110,71 @@ namespace polygon
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Line ab = new Line(new Point(10, 10), new Point(100, 70));
-            Line cd = new Line(new Point(30, 5), new Point(40, 80));
-            //g.DrawLine(Pens.Black, ab.a, ab.b);
-            g.DrawLine(Pens.Black, cd.a, cd.b);
-            Point intersectPoint = ab.getIntersectPoint(cd);
-            if(!intersectPoint.IsEmpty)
+            Point intersect = new Point();
+            Collection<Line> one, two, newOne, newTwo;
+            newOne = new Collection<Line>();
+            newTwo = new Collection<Line>();
+            one = polygons[0].getLinesCollection(); //линии первого полигона
+            two = polygons[1].getLinesCollection(); //линии второго полигона
+            int N = one.Count; //число линий в первом полигоне
+            int M = two.Count; //число линий во втором полигоне
+
+            for(int i = 0; i < N;i++)
             {
-                g.FillRectangle(Brushes.Red, intersectPoint.X, intersectPoint.Y, 1, 1);
-                g.FillRectangle(Brushes.Red, 37, 63, 1, 1);
+                newOne.Add(one[i]);
+                for (int j = 0; j < M; j++)
+                {
+                    if(i == 0)
+                        newTwo.Add(two[j]); //добавляем линии второго полигона только один раз
+                    intersect = one[i].getIntersectPoint(two[j]);
+                    if (!intersect.IsEmpty)
+                    {
+                        tbLog.Text += ("Точка пересечения " + intersect.ToString()) + Environment.NewLine;
+                        //для первого полигона
+                        foreach(Line line in newOne)
+                        {
+                            if(line.hasPoint(intersect))
+                            {
+                                tbLog.Text += ("Точка есть в А") + Environment.NewLine;
+                                //запоминаем точки отрезка с точкой пересечения 
+                                Point a = new Point(line.a.X, line.a.Y);
+                                Point b = new Point(line.b.X, line.b.Y);
+                                //удаляем этот отрезок
+                                newOne.Remove(line);
+                                //добавляем два новых
+                                newOne.Add(new Line(a, intersect));
+                                newOne.Add(new Line(intersect, b));
+                                break;
+                            }
+                        }
+                        //для второго полигона
+                        foreach (Line line in newTwo)
+                        {
+                            if (line.hasPoint(intersect))
+                            {
+                                tbLog.Text += ("Точка есть в Б") + Environment.NewLine;
+                                //запоминаем точки отрезка с точкой пересечения 
+                                Point a = new Point(line.a.X, line.a.Y);
+                                Point b = new Point(line.b.X, line.b.Y);
+                                //удаляем этот отрезок
+                                newTwo.Remove(line);
+                                //добавляем два новых
+                                newTwo.Add(new Line(a, intersect));
+                                newTwo.Add(new Line(intersect, b));
+                                break;
+                            }
+                        }
+                    }
+                }
             }
-            MessageBox.Show(ab.hasPoint(intersectPoint).ToString());
-            MessageBox.Show(cd.hasPoint(new Point(37, 63)).ToString());
+
+            foreach(Line line in newTwo)
+            {
+                tbPointsPolygonA.Text += (line.a.ToString() + " " + line.b.ToString()+Environment.NewLine);
+                g.DrawRectangle(Pens.Red, line.a.X, line.a.Y, 2, 2);
+                g.DrawRectangle(Pens.Red, line.b.X, line.b.Y, 2, 2);
+
+            }
         }
 
         /// <summary>

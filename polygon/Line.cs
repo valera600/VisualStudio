@@ -30,7 +30,7 @@ namespace polygon
         /// <param name="a">Первая точка треугольника</param>
         /// <param name="b">Вторая точка треугольника</param>
         /// <param name="c">Третья точка треугольника</param>
-        /// <returns>Целочесленная площадь треугольника</returns>
+        /// <returns>Целочисленная ориентированная площадь треугольника</returns>
         int area (Point a, Point b, Point c) {
 	        return (b.X - a.X) * (c.Y - a.Y) - (b.Y - a.Y) * (c.X - a.X);
         }
@@ -61,14 +61,26 @@ namespace polygon
         }
 
         public bool intersect (Point c, Point d) {
-            Boolean intersect;
+            bool intersect;
             if (a == c || a == d || b == c || b == d)
                 intersect = false;
-	        else 
-                intersect = intersect_1 (a.X, b.X, c.X, d.X)
-		&& intersect_1 (a.Y, b.Y, c.Y, d.Y)
-		&& area(a,b,c) * area(a,b,d) <= 0
-		&& area(c,d,a) * area(c,d,b) <= 0;
+            else
+            {
+                intersect = intersect_1(a.X, b.X, c.X, d.X) && intersect_1(a.Y, b.Y, c.Y, d.Y);
+                Int64 areaA, areaB;
+                areaA = area(a, b, c);
+                areaB = area(a, b, d);
+                if((areaA <= 0 && areaB >= 0) || (areaA >= 0 && areaB <= 0))
+                    intersect = intersect && true;
+                else
+                    intersect = false;
+                areaA = area(c, d, a);
+                areaB = area(c, d, b);
+                if ((areaA <= 0 && areaB >= 0) || (areaA >= 0 && areaB <= 0))
+                    intersect = intersect && true;
+                else
+                    intersect = false;
+            }
             return intersect;
         }
 
@@ -98,15 +110,38 @@ namespace polygon
         public bool hasPoint(Point point)
         {
             bool hasPoint;
-            double eps = 0.05;
-            double p = (point.X - this.b.X) / Convert.ToDouble((this.a.X - this.b.X));
+            double eps = 1.99;
+            double p;
+            bool forX;
+            if (Math.Abs(this.a.X - this.b.X) >= Math.Abs(this.a.Y - this.b.Y))
+            {
+                p = (point.X - this.b.X) / Convert.ToDouble((this.a.X - this.b.X));
+                forX = true;
+            }
+            else
+            {
+                p = (point.Y - this.b.Y) / Convert.ToDouble((this.a.Y - this.b.Y));
+                forX = false;
+            }
             if(p >= 0 && p <= 1)
             {
-                double p2 = ((point.Y - this.b.Y) / Convert.ToDouble((this.a.Y - this.b.Y)));
-                if (p >= (p2-eps) && p <= (p2+eps))
-                    hasPoint = true;
+                double invP = 1 - p;
+                if (forX)
+                {
+                    double x = (p * this.a.X + (invP * this.b.X));
+                    if (x - eps <= point.X && x + eps >= point.X)
+                        hasPoint = true;
+                    else
+                        hasPoint = false;
+                }
                 else
-                    hasPoint = false;
+                {
+                    double y = (p * this.a.Y + (invP * this.b.Y));
+                    if (y - eps <= point.Y && y + eps >= point.Y)
+                        hasPoint = true;
+                    else
+                        hasPoint = false;
+                }
             }
             else
             {

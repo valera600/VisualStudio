@@ -111,5 +111,27 @@ namespace polygon
         {
             this.pointCollection.Clear();
         }
+
+
+        /// <summary>
+        /// Возвращает коллекцию линий из которых состоит полигон
+        /// </summary>
+        /// <returns>Collection<Line></returns>
+        public Collection<Line> getLinesCollection()
+        {
+            Point a = new Point();
+            Point b = new Point();
+            Collection<Line> lines = new Collection<Line>();
+            for (int i = 0; i < pointCollection.Count; i++)
+            {
+                a = pointCollection[i];
+                if (i < pointCollection.Count - 1)
+                    b = pointCollection[i + 1];
+                else
+                    b = pointCollection[0];
+                lines.Add(new Line(a, b));
+            }
+            return lines;
+        }
     }
 }

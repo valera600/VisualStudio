@@ -36,6 +36,7 @@
             this.button1 = new System.Windows.Forms.Button();
             this.btStartPolygonB = new System.Windows.Forms.Button();
             this.tbPointsPolygonB = new System.Windows.Forms.TextBox();
+            this.tbLog = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.workSpace)).BeginInit();
             this.SuspendLayout();
             // 
@@ -125,11 +126,21 @@
             this.tbPointsPolygonB.TabStop = false;
             this.tbPointsPolygonB.Text = "Точки полигона Б:";
             // 
+            // tbLog
+            // 
+            this.tbLog.Location = new System.Drawing.Point(364, 38);
+            this.tbLog.Multiline = true;
+            this.tbLog.Name = "tbLog";
+            this.tbLog.ReadOnly = true;
+            this.tbLog.Size = new System.Drawing.Size(310, 86);
+            this.tbLog.TabIndex = 8;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(715, 513);
+            this.Controls.Add(this.tbLog);
             this.Controls.Add(this.tbPointsPolygonB);
             this.Controls.Add(this.btStartPolygonB);
             this.Controls.Add(this.button1);
@@ -156,6 +167,7 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button btStartPolygonB;
         private System.Windows.Forms.TextBox tbPointsPolygonB;
+        private System.Windows.Forms.TextBox tbLog;
     }
 }
 
