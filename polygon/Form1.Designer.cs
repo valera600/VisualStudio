@@ -28,16 +28,21 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.workSpace = new System.Windows.Forms.PictureBox();
             this.btStartPolygonA = new System.Windows.Forms.Button();
             this.btStopPolygon = new System.Windows.Forms.Button();
             this.tbPointsPolygonA = new System.Windows.Forms.TextBox();
             this.cbFillPolygon = new System.Windows.Forms.CheckBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.btUnion = new System.Windows.Forms.Button();
             this.btStartPolygonB = new System.Windows.Forms.Button();
             this.tbPointsPolygonB = new System.Windows.Forms.TextBox();
             this.tbLog = new System.Windows.Forms.TextBox();
             this.pbUnion = new System.Windows.Forms.PictureBox();
+            this.printDoc = new System.Drawing.Printing.PrintDocument();
+            this.button2 = new System.Windows.Forms.Button();
+            this.printPrevDialog = new System.Windows.Forms.PrintPreviewDialog();
+            this.printDialogSetting = new System.Windows.Forms.PrintDialog();
             ((System.ComponentModel.ISupportInitialize)(this.workSpace)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbUnion)).BeginInit();
             this.SuspendLayout();
@@ -97,15 +102,15 @@
             this.cbFillPolygon.UseVisualStyleBackColor = true;
             this.cbFillPolygon.CheckedChanged += new System.EventHandler(this.cbFillPolygon_CheckedChanged);
             // 
-            // button1
+            // btUnion
             // 
-            this.button1.Location = new System.Drawing.Point(261, 49);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 5;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.btUnion.Location = new System.Drawing.Point(251, 49);
+            this.btUnion.Name = "btUnion";
+            this.btUnion.Size = new System.Drawing.Size(97, 23);
+            this.btUnion.TabIndex = 5;
+            this.btUnion.Text = "Объединение";
+            this.btUnion.UseVisualStyleBackColor = true;
+            this.btUnion.Click += new System.EventHandler(this.btUnion_Click);
             // 
             // btStartPolygonB
             // 
@@ -146,16 +151,47 @@
             this.pbUnion.TabIndex = 9;
             this.pbUnion.TabStop = false;
             // 
+            // printDoc
+            // 
+            this.printDoc.PrintPage += new System.Drawing.Printing.PrintPageEventHandler(this.printDoc_PrintPage);
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(261, 94);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(75, 23);
+            this.button2.TabIndex = 10;
+            this.button2.Text = "button2";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // printPrevDialog
+            // 
+            this.printPrevDialog.AutoScrollMargin = new System.Drawing.Size(0, 0);
+            this.printPrevDialog.AutoScrollMinSize = new System.Drawing.Size(0, 0);
+            this.printPrevDialog.ClientSize = new System.Drawing.Size(400, 300);
+            this.printPrevDialog.Document = this.printDoc;
+            this.printPrevDialog.Enabled = true;
+            this.printPrevDialog.Icon = ((System.Drawing.Icon)(resources.GetObject("printPrevDialog.Icon")));
+            this.printPrevDialog.Name = "printPrevDialog";
+            this.printPrevDialog.Visible = false;
+            // 
+            // printDialogSetting
+            // 
+            this.printDialogSetting.Document = this.printDoc;
+            this.printDialogSetting.UseEXDialog = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1135, 514);
+            this.Controls.Add(this.button2);
             this.Controls.Add(this.pbUnion);
             this.Controls.Add(this.tbLog);
             this.Controls.Add(this.tbPointsPolygonB);
             this.Controls.Add(this.btStartPolygonB);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.btUnion);
             this.Controls.Add(this.cbFillPolygon);
             this.Controls.Add(this.tbPointsPolygonA);
             this.Controls.Add(this.btStopPolygon);
@@ -177,11 +213,15 @@
         private System.Windows.Forms.Button btStopPolygon;
         private System.Windows.Forms.TextBox tbPointsPolygonA;
         private System.Windows.Forms.CheckBox cbFillPolygon;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btUnion;
         private System.Windows.Forms.Button btStartPolygonB;
         private System.Windows.Forms.TextBox tbPointsPolygonB;
         private System.Windows.Forms.TextBox tbLog;
         private System.Windows.Forms.PictureBox pbUnion;
+        private System.Drawing.Printing.PrintDocument printDoc;
+        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.PrintPreviewDialog printPrevDialog;
+        private System.Windows.Forms.PrintDialog printDialogSetting;
     }
 }
 
