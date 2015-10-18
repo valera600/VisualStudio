@@ -37,7 +37,9 @@
             this.btStartPolygonB = new System.Windows.Forms.Button();
             this.tbPointsPolygonB = new System.Windows.Forms.TextBox();
             this.tbLog = new System.Windows.Forms.TextBox();
+            this.pbUnion = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.workSpace)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbUnion)).BeginInit();
             this.SuspendLayout();
             // 
             // workSpace
@@ -117,7 +119,7 @@
             // 
             // tbPointsPolygonB
             // 
-            this.tbPointsPolygonB.Location = new System.Drawing.Point(597, 131);
+            this.tbPointsPolygonB.Location = new System.Drawing.Point(1017, 131);
             this.tbPointsPolygonB.Multiline = true;
             this.tbPointsPolygonB.Name = "tbPointsPolygonB";
             this.tbPointsPolygonB.ReadOnly = true;
@@ -135,11 +137,21 @@
             this.tbLog.Size = new System.Drawing.Size(310, 86);
             this.tbLog.TabIndex = 8;
             // 
+            // pbUnion
+            // 
+            this.pbUnion.BackColor = System.Drawing.Color.White;
+            this.pbUnion.Location = new System.Drawing.Point(579, 130);
+            this.pbUnion.Name = "pbUnion";
+            this.pbUnion.Size = new System.Drawing.Size(432, 371);
+            this.pbUnion.TabIndex = 9;
+            this.pbUnion.TabStop = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(715, 513);
+            this.ClientSize = new System.Drawing.Size(1135, 514);
+            this.Controls.Add(this.pbUnion);
             this.Controls.Add(this.tbLog);
             this.Controls.Add(this.tbPointsPolygonB);
             this.Controls.Add(this.btStartPolygonB);
@@ -152,6 +164,7 @@
             this.Name = "Form1";
             this.Text = "Polygon";
             ((System.ComponentModel.ISupportInitialize)(this.workSpace)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbUnion)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -168,6 +181,7 @@
         private System.Windows.Forms.Button btStartPolygonB;
         private System.Windows.Forms.TextBox tbPointsPolygonB;
         private System.Windows.Forms.TextBox tbLog;
+        private System.Windows.Forms.PictureBox pbUnion;
     }
 }
 

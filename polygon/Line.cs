@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -31,7 +32,7 @@ namespace polygon
         /// <param name="b">Вторая точка треугольника</param>
         /// <param name="c">Третья точка треугольника</param>
         /// <returns>Целочисленная ориентированная площадь треугольника</returns>
-        int area (Point a, Point b, Point c) {
+        public int area (Point a, Point b, Point c) {
 	        return (b.X - a.X) * (c.Y - a.Y) - (b.Y - a.Y) * (c.X - a.X);
         }
 
@@ -62,7 +63,7 @@ namespace polygon
 
         public bool intersect (Point c, Point d) {
             bool intersect;
-            if (a == c || a == d || b == c || b == d)
+            if (a == c || a == d || b == c || b == d || (((d.Y - c.Y) * (b.X - a.X)) - ((d.X - c.X) * (b.Y - a.Y))) == 0)
                 intersect = false;
             else
             {
@@ -116,12 +117,12 @@ namespace polygon
             if (Math.Abs(this.a.X - this.b.X) >= Math.Abs(this.a.Y - this.b.Y))
             {
                 p = (point.X - this.b.X) / Convert.ToDouble((this.a.X - this.b.X));
-                forX = true;
+                forX = false;
             }
             else
             {
                 p = (point.Y - this.b.Y) / Convert.ToDouble((this.a.Y - this.b.Y));
-                forX = false;
+                forX = true;
             }
             if(p >= 0 && p <= 1)
             {
@@ -148,6 +149,40 @@ namespace polygon
                 hasPoint = false;
             }
             return hasPoint;
+        }
+
+        static public Collection<Line> normalizeCollection(Collection<Line> collect, Point point)
+        {
+            Collection<Line> normCollect = new Collection<Line>();
+            Line curLine = new Line();
+
+            //ищем линию с точкой-вершиной полигона
+            foreach (Line line in collect)
+            {
+                if (line.a == point)
+                {
+                    curLine = line;
+                    normCollect.Add(curLine);
+                    collect.Remove(curLine);
+                    break;
+                }
+            }
+
+            //присоединяем линии
+            while(collect.Count > 0)
+            {
+                foreach(Line line in collect)
+                {
+                    if (curLine.b == line.a)
+                    {
+                        curLine = line;
+                        normCollect.Add(curLine);
+                        collect.Remove(curLine);
+                        break;
+                    }
+                }
+            }
+            return normCollect;
         }
     }
 }

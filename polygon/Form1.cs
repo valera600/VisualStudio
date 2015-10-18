@@ -15,12 +15,14 @@ namespace polygon
     {
         const int n = 3; //используем в программе 3 полигона (2 рисует юзер и объединение этих полигонов)
         Graphics g;
+        Graphics gUnion;
         Polygon[] polygons = new Polygon[n];
         int currentPolygon = -1;    //хранит номер редактируемого полигона в данный момент {-1 - ни один, 0 - первый, 1 - второй,}
         public Form1()
         {
             InitializeComponent();
             g = workSpace.CreateGraphics();
+            gUnion = pbUnion.CreateGraphics();
             for (int i = 0; i < n; i++)
                 polygons[i] = new Polygon();
         }
@@ -78,8 +80,9 @@ namespace polygon
             else
             {
                 MessageBox.Show("На данный момент не активировано рисование полигонов!");
-                Line line = new Line(new Point(124, 98), new Point(123, 228));
-                line.hasPoint(new Point(124, 147));
+                Line line = new Line(new Point(30, 30), new Point(70, 30));
+                Line line2 = new Line(new Point(25, 30), new Point(75, 30));
+                MessageBox.Show(line.intersect(line2).ToString());
             }
         }
 
@@ -110,15 +113,18 @@ namespace polygon
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Point intersect = new Point();
-            Collection<Line> one, two, newOne, newTwo;
-            newOne = new Collection<Line>();
-            newTwo = new Collection<Line>();
+            Point intersect = new Point();  //точка пересечения
+            Collection<Line> one, two, newOne, newTwo, union;
+            Collection<Point> intersectPoints = new Collection<Point>(); //запомним какие из точек - точки пересечения
+            newOne = new Collection<Line>(); //первый полигон, дополненный точками пересечения
+            newTwo = new Collection<Line>(); //второй с точками пересечения
+            union = new Collection<Line>();
             one = polygons[0].getLinesCollection(); //линии первого полигона
             two = polygons[1].getLinesCollection(); //линии второго полигона
             int N = one.Count; //число линий в первом полигоне
             int M = two.Count; //число линий во втором полигоне
 
+            //добавляем в полигоны точки пересечений
             for(int i = 0; i < N;i++)
             {
                 newOne.Add(one[i]);
@@ -126,10 +132,13 @@ namespace polygon
                 {
                     if(i == 0)
                         newTwo.Add(two[j]); //добавляем линии второго полигона только один раз
-                    intersect = one[i].getIntersectPoint(two[j]);
+                    intersect = one[i].getIntersectPoint(two[j]); //находим точку пересечения
+                    if (one[i].a == intersect || one[i].b == intersect || two[j].a == intersect || two[j].b == intersect)
+                        intersect = new Point();
                     if (!intersect.IsEmpty)
                     {
                         tbLog.Text += ("Точка пересечения " + intersect.ToString()) + Environment.NewLine;
+                        intersectPoints.Add(intersect);
                         //для первого полигона
                         foreach(Line line in newOne)
                         {
@@ -168,13 +177,133 @@ namespace polygon
                 }
             }
 
-            foreach(Line line in newTwo)
-            {
-                tbPointsPolygonA.Text += (line.a.ToString() + " " + line.b.ToString()+Environment.NewLine);
-                g.DrawRectangle(Pens.Red, line.a.X, line.a.Y, 2, 2);
-                g.DrawRectangle(Pens.Red, line.b.X, line.b.Y, 2, 2);
+            Boolean pointOneInsideTwo, pointTwoInsideOne; //находится ли точка данного полигона внутри другого полигона
 
+            //проверка на то, что на трассировочный луч попала вершина полигона
+            
+            Line ray = new Line(one[0].a, new Point(0, 0)); //трассировочный отрезок(луч) из проверяемой точки в 0,0
+            /*Collection<Point> twoPolygon = polygons[1].pointCollection;
+            foreach (Point point in twoPolygon)
+            {
+                if(ray.hasPoint(point))
+                {
+                }
+            }*/
+
+            int countIntersect = 0; //счетчик пересечений с контуром полигона
+            foreach(Line line in two)
+            {
+                if (ray.intersect(line))
+                {
+                    countIntersect++;
+                }
             }
+            //если чётное количество пересечений с трассировочным лучом, то точка лежит вне проверяемого полигона
+            if(countIntersect % 2 == 0)
+            {
+                pointOneInsideTwo = false;
+            }
+            else
+            {
+                pointOneInsideTwo = true;
+            }
+
+            //проверяем находится ли точка второго полигона внутри контура первого
+            countIntersect = 0;
+            ray = new Line(two[0].a, new Point(0, 0));
+            foreach (Line line in one)
+            {
+                if (ray.intersect(line))
+                {
+                    countIntersect++;
+                }
+            }
+            //если чётное количество пересечений с трассировочным лучом, то точка лежит вне проверяемого полигона
+            if (countIntersect % 2 == 0)
+            {
+                pointTwoInsideOne = false;
+            }
+            else
+            {
+                pointTwoInsideOne = true;
+            }
+
+            //составляем объединение
+            Point newA = new Point();
+            Point newB = new Point();
+
+            newOne = Line.normalizeCollection(newOne, one[0].a);
+            newTwo = Line.normalizeCollection(newTwo, two[0].a);
+
+            //обходим линии первого полигона
+            foreach(Line line in newOne)
+            {
+                if (!pointOneInsideTwo)
+                {
+                    if (newA.IsEmpty)
+                        newA = line.a;
+                    else
+                        newB = line.a;
+                }
+
+                if (!pointOneInsideTwo)
+                {
+                    if (newA.IsEmpty)
+                        newA = line.b;
+                    else
+                        newB = line.b;
+                }
+                if (intersectPoints.Contains(line.b))
+                    pointOneInsideTwo = !pointOneInsideTwo;
+
+                if( (!newA.IsEmpty) && (!newB.IsEmpty) )
+                {
+                    union.Add(new Line(newA, newB));
+                    newA = new Point();
+                    newB = new Point();
+                }
+            }
+
+            newA = new Point();
+            newB = new Point();
+            //обходим линии второго полигона
+            foreach (Line line in newTwo)
+            {
+                if (!pointTwoInsideOne)
+                {
+                    if (newA.IsEmpty)
+                        newA = line.a;
+                    else
+                        newB = line.a;
+                }
+                /*if (intersectPoints.Contains(line.a))
+                    pointTwoInsideOne = !pointTwoInsideOne;*/
+
+                if (!pointTwoInsideOne)
+                {
+                    if (newA.IsEmpty)
+                        newA = line.b;
+                    else
+                        newB = line.b;
+                }
+                if (intersectPoints.Contains(line.b))
+                    pointTwoInsideOne = !pointTwoInsideOne;
+
+
+                if ((!newA.IsEmpty) && (!newB.IsEmpty))
+                {
+                    union.Add(new Line(newA, newB));
+                    newA = new Point();
+                    newB = new Point();
+                }
+            }
+
+            gUnion.Clear(Color.White);
+            foreach(Line line in union)
+            {
+                gUnion.DrawLine(Pens.Red, line.a, line.b);
+            }
+
         }
 
         /// <summary>
