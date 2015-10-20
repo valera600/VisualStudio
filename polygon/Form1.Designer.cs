@@ -30,21 +30,25 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.workSpace = new System.Windows.Forms.PictureBox();
-            this.btStartPolygonA = new System.Windows.Forms.Button();
+            this.btDrawPolygon = new System.Windows.Forms.Button();
             this.btStopPolygon = new System.Windows.Forms.Button();
             this.tbPointsPolygonA = new System.Windows.Forms.TextBox();
             this.cbFillPolygon = new System.Windows.Forms.CheckBox();
             this.btUnion = new System.Windows.Forms.Button();
-            this.btStartPolygonB = new System.Windows.Forms.Button();
             this.tbPointsPolygonB = new System.Windows.Forms.TextBox();
             this.tbLog = new System.Windows.Forms.TextBox();
             this.pbUnion = new System.Windows.Forms.PictureBox();
             this.printDoc = new System.Drawing.Printing.PrintDocument();
-            this.button2 = new System.Windows.Forms.Button();
+            this.btPrint = new System.Windows.Forms.Button();
             this.printPrevDialog = new System.Windows.Forms.PrintPreviewDialog();
             this.printDialogSetting = new System.Windows.Forms.PrintDialog();
+            this.rb1 = new System.Windows.Forms.RadioButton();
+            this.rb2 = new System.Windows.Forms.RadioButton();
+            this.gbRadioButton = new System.Windows.Forms.GroupBox();
+            this.btPreview = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.workSpace)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbUnion)).BeginInit();
+            this.gbRadioButton.SuspendLayout();
             this.SuspendLayout();
             // 
             // workSpace
@@ -58,20 +62,20 @@
             this.workSpace.TabStop = false;
             this.workSpace.MouseUp += new System.Windows.Forms.MouseEventHandler(this.workSpace_MouseUp);
             // 
-            // btStartPolygonA
+            // btDrawPolygon
             // 
-            this.btStartPolygonA.Location = new System.Drawing.Point(12, 12);
-            this.btStartPolygonA.Name = "btStartPolygonA";
-            this.btStartPolygonA.Size = new System.Drawing.Size(222, 31);
-            this.btStartPolygonA.TabIndex = 1;
-            this.btStartPolygonA.Text = "Начать рисовать первый полигон";
-            this.btStartPolygonA.UseVisualStyleBackColor = true;
-            this.btStartPolygonA.Click += new System.EventHandler(this.btStartPolygonA_Click);
+            this.btDrawPolygon.Location = new System.Drawing.Point(12, 12);
+            this.btDrawPolygon.Name = "btDrawPolygon";
+            this.btDrawPolygon.Size = new System.Drawing.Size(222, 31);
+            this.btDrawPolygon.TabIndex = 1;
+            this.btDrawPolygon.Text = "Начать рисовать полигон";
+            this.btDrawPolygon.UseVisualStyleBackColor = true;
+            this.btDrawPolygon.Click += new System.EventHandler(this.btDrawPolygon_Click);
             // 
             // btStopPolygon
             // 
             this.btStopPolygon.Enabled = false;
-            this.btStopPolygon.Location = new System.Drawing.Point(12, 94);
+            this.btStopPolygon.Location = new System.Drawing.Point(14, 49);
             this.btStopPolygon.Name = "btStopPolygon";
             this.btStopPolygon.Size = new System.Drawing.Size(222, 31);
             this.btStopPolygon.TabIndex = 2;
@@ -94,7 +98,7 @@
             // 
             this.cbFillPolygon.AutoSize = true;
             this.cbFillPolygon.Enabled = false;
-            this.cbFillPolygon.Location = new System.Drawing.Point(261, 12);
+            this.cbFillPolygon.Location = new System.Drawing.Point(240, 12);
             this.cbFillPolygon.Name = "cbFillPolygon";
             this.cbFillPolygon.Size = new System.Drawing.Size(146, 17);
             this.cbFillPolygon.TabIndex = 4;
@@ -104,23 +108,13 @@
             // 
             // btUnion
             // 
-            this.btUnion.Location = new System.Drawing.Point(251, 49);
+            this.btUnion.Location = new System.Drawing.Point(392, 9);
             this.btUnion.Name = "btUnion";
             this.btUnion.Size = new System.Drawing.Size(97, 23);
             this.btUnion.TabIndex = 5;
             this.btUnion.Text = "Объединение";
             this.btUnion.UseVisualStyleBackColor = true;
             this.btUnion.Click += new System.EventHandler(this.btUnion_Click);
-            // 
-            // btStartPolygonB
-            // 
-            this.btStartPolygonB.Location = new System.Drawing.Point(12, 49);
-            this.btStartPolygonB.Name = "btStartPolygonB";
-            this.btStartPolygonB.Size = new System.Drawing.Size(224, 31);
-            this.btStartPolygonB.TabIndex = 6;
-            this.btStartPolygonB.Text = "Начать рисовать второй полигон";
-            this.btStartPolygonB.UseVisualStyleBackColor = true;
-            this.btStartPolygonB.Click += new System.EventHandler(this.btStartPolygonB_Click);
             // 
             // tbPointsPolygonB
             // 
@@ -135,7 +129,7 @@
             // 
             // tbLog
             // 
-            this.tbLog.Location = new System.Drawing.Point(364, 38);
+            this.tbLog.Location = new System.Drawing.Point(392, 35);
             this.tbLog.Multiline = true;
             this.tbLog.Name = "tbLog";
             this.tbLog.ReadOnly = true;
@@ -155,15 +149,15 @@
             // 
             this.printDoc.PrintPage += new System.Drawing.Printing.PrintPageEventHandler(this.printDoc_PrintPage);
             // 
-            // button2
+            // btPrint
             // 
-            this.button2.Location = new System.Drawing.Point(261, 94);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 10;
-            this.button2.Text = "button2";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.btPrint.Location = new System.Drawing.Point(498, 9);
+            this.btPrint.Name = "btPrint";
+            this.btPrint.Size = new System.Drawing.Size(75, 23);
+            this.btPrint.TabIndex = 10;
+            this.btPrint.Text = "Печать";
+            this.btPrint.UseVisualStyleBackColor = true;
+            this.btPrint.Click += new System.EventHandler(this.btPrint_Click);
             // 
             // printPrevDialog
             // 
@@ -181,26 +175,72 @@
             this.printDialogSetting.Document = this.printDoc;
             this.printDialogSetting.UseEXDialog = true;
             // 
+            // rb1
+            // 
+            this.rb1.AutoSize = true;
+            this.rb1.Checked = true;
+            this.rb1.Location = new System.Drawing.Point(6, 28);
+            this.rb1.Name = "rb1";
+            this.rb1.Size = new System.Drawing.Size(65, 17);
+            this.rb1.TabIndex = 11;
+            this.rb1.TabStop = true;
+            this.rb1.Text = "Первый";
+            this.rb1.UseVisualStyleBackColor = true;
+            // 
+            // rb2
+            // 
+            this.rb2.AutoSize = true;
+            this.rb2.Location = new System.Drawing.Point(6, 59);
+            this.rb2.Name = "rb2";
+            this.rb2.Size = new System.Drawing.Size(61, 17);
+            this.rb2.TabIndex = 12;
+            this.rb2.Text = "Второй";
+            this.rb2.UseVisualStyleBackColor = true;
+            // 
+            // gbRadioButton
+            // 
+            this.gbRadioButton.Controls.Add(this.rb2);
+            this.gbRadioButton.Controls.Add(this.rb1);
+            this.gbRadioButton.Location = new System.Drawing.Point(242, 35);
+            this.gbRadioButton.Name = "gbRadioButton";
+            this.gbRadioButton.Size = new System.Drawing.Size(114, 89);
+            this.gbRadioButton.TabIndex = 13;
+            this.gbRadioButton.TabStop = false;
+            this.gbRadioButton.Text = "Текущий полигон";
+            // 
+            // btPreview
+            // 
+            this.btPreview.Location = new System.Drawing.Point(579, 9);
+            this.btPreview.Name = "btPreview";
+            this.btPreview.Size = new System.Drawing.Size(174, 23);
+            this.btPreview.TabIndex = 14;
+            this.btPreview.Text = "Предварительный просмотр";
+            this.btPreview.UseVisualStyleBackColor = true;
+            this.btPreview.Click += new System.EventHandler(this.btPreview_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1135, 514);
-            this.Controls.Add(this.button2);
+            this.Controls.Add(this.btPreview);
+            this.Controls.Add(this.gbRadioButton);
+            this.Controls.Add(this.btPrint);
             this.Controls.Add(this.pbUnion);
             this.Controls.Add(this.tbLog);
             this.Controls.Add(this.tbPointsPolygonB);
-            this.Controls.Add(this.btStartPolygonB);
             this.Controls.Add(this.btUnion);
             this.Controls.Add(this.cbFillPolygon);
             this.Controls.Add(this.tbPointsPolygonA);
             this.Controls.Add(this.btStopPolygon);
-            this.Controls.Add(this.btStartPolygonA);
+            this.Controls.Add(this.btDrawPolygon);
             this.Controls.Add(this.workSpace);
             this.Name = "Form1";
             this.Text = "Polygon";
             ((System.ComponentModel.ISupportInitialize)(this.workSpace)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbUnion)).EndInit();
+            this.gbRadioButton.ResumeLayout(false);
+            this.gbRadioButton.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -209,19 +249,22 @@
         #endregion
 
         private System.Windows.Forms.PictureBox workSpace;
-        private System.Windows.Forms.Button btStartPolygonA;
+        private System.Windows.Forms.Button btDrawPolygon;
         private System.Windows.Forms.Button btStopPolygon;
         private System.Windows.Forms.TextBox tbPointsPolygonA;
         private System.Windows.Forms.CheckBox cbFillPolygon;
         private System.Windows.Forms.Button btUnion;
-        private System.Windows.Forms.Button btStartPolygonB;
         private System.Windows.Forms.TextBox tbPointsPolygonB;
         private System.Windows.Forms.TextBox tbLog;
         private System.Windows.Forms.PictureBox pbUnion;
         private System.Drawing.Printing.PrintDocument printDoc;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button btPrint;
         private System.Windows.Forms.PrintPreviewDialog printPrevDialog;
         private System.Windows.Forms.PrintDialog printDialogSetting;
+        private System.Windows.Forms.RadioButton rb1;
+        private System.Windows.Forms.RadioButton rb2;
+        private System.Windows.Forms.GroupBox gbRadioButton;
+        private System.Windows.Forms.Button btPreview;
     }
 }
 

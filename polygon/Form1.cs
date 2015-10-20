@@ -28,31 +28,24 @@ namespace polygon
                 polygons[i] = new Polygon();
         }
 
-        private void btStartPolygonA_Click(object sender, EventArgs e)
+        private void btDrawPolygon_Click(object sender, EventArgs e)
         {
             if (currentPolygon == -1)
             {
-                polygons[0].Clear();
-                tbPointsPolygonA.Text = "Точки полигона А:";
+                if (rb1.Checked)
+                {
+                    currentPolygon = 0;
+                    tbPointsPolygonA.Text = "A:";
+                }
+                else
+                {
+                    currentPolygon = 1;
+                    tbPointsPolygonB.Text = "B:";
+                }
+                polygons[currentPolygon].Clear();
                 ReDraw();
-                btStartPolygonA.Enabled = false;    //отключаем кнопки запуска рисования
-                btStartPolygonB.Enabled = false;    // полигонов
+                btDrawPolygon.Enabled = false;    //отключаем кнопки запуска рисования
                 btStopPolygon.Enabled = true;  //включаем кнопку остановки рисования полигонов
-                currentPolygon = 0; //на данный момент рисуется первый полигон
-            }
-        }
-
-        private void btStartPolygonB_Click(object sender, EventArgs e)
-        {
-            if (currentPolygon == -1)
-            {
-                polygons[1].Clear();
-                tbPointsPolygonB.Text = "Точки полигона Б:";
-                ReDraw();
-                btStartPolygonA.Enabled = false;    //отключаем кнопки запуска рисования 
-                btStartPolygonB.Enabled = false;    // полигонов
-                btStopPolygon.Enabled = true;  //включаем кнопку остановки рисования полигонов
-                currentPolygon = 1; //на данный момент рисуется второй полигон
             }
         }
 
@@ -321,8 +314,7 @@ namespace polygon
                     {
                         if (!polygons[currentPolygon].isBadPoint(polygons[currentPolygon].getFirstPoint()))
                         {
-                            btStartPolygonA.Enabled = true;    //включаем кнопки запуска рисования 
-                            btStartPolygonB.Enabled = true;    //полигонов
+                            btDrawPolygon.Enabled = true;    //включаем кнопки запуска рисования 
                             btStopPolygon.Enabled = false;  //выключаем кнопку остановки рисования полигонов
                             g.DrawPolygon(Pens.Black, polygons[currentPolygon].pointCollection.ToArray());
                             currentPolygon = -1; //на данный момент ни какой полигон не рисуется
@@ -374,10 +366,15 @@ namespace polygon
             }
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void btPrint_Click(object sender, EventArgs e)
         {
             if (printDialogSetting.ShowDialog() == DialogResult.OK)
                 printDoc.Print();
+        }
+
+        private void btPreview_Click(object sender, EventArgs e)
+        {
+            printPrevDialog.ShowDialog();
         }
     }
 }
