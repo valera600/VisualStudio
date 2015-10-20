@@ -59,6 +59,9 @@
             this.lbWorkSpace = new System.Windows.Forms.Label();
             this.gbPolygons = new System.Windows.Forms.GroupBox();
             this.btSaveToDB = new System.Windows.Forms.Button();
+            this.cbPolygonsInBD = new System.Windows.Forms.ComboBox();
+            this.btLoadFromDB = new System.Windows.Forms.Button();
+            this.lbNamePolygonBD = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.workSpace)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbUnion)).BeginInit();
             this.gbRadioButton.SuspendLayout();
@@ -276,7 +279,7 @@
             // 
             // btLoadFromFile
             // 
-            this.btLoadFromFile.Location = new System.Drawing.Point(375, 88);
+            this.btLoadFromFile.Location = new System.Drawing.Point(375, 94);
             this.btLoadFromFile.Name = "btLoadFromFile";
             this.btLoadFromFile.Size = new System.Drawing.Size(128, 23);
             this.btLoadFromFile.TabIndex = 19;
@@ -341,7 +344,7 @@
             // 
             // btSaveToDB
             // 
-            this.btSaveToDB.Location = new System.Drawing.Point(521, 49);
+            this.btSaveToDB.Location = new System.Drawing.Point(700, 49);
             this.btSaveToDB.Name = "btSaveToDB";
             this.btSaveToDB.Size = new System.Drawing.Size(147, 23);
             this.btSaveToDB.TabIndex = 25;
@@ -349,11 +352,41 @@
             this.btSaveToDB.UseVisualStyleBackColor = true;
             this.btSaveToDB.Click += new System.EventHandler(this.btSaveToDB_Click);
             // 
+            // cbPolygonsInBD
+            // 
+            this.cbPolygonsInBD.FormattingEnabled = true;
+            this.cbPolygonsInBD.Location = new System.Drawing.Point(530, 97);
+            this.cbPolygonsInBD.Name = "cbPolygonsInBD";
+            this.cbPolygonsInBD.Size = new System.Drawing.Size(150, 21);
+            this.cbPolygonsInBD.TabIndex = 26;
+            // 
+            // btLoadFromDB
+            // 
+            this.btLoadFromDB.Location = new System.Drawing.Point(530, 49);
+            this.btLoadFromDB.Name = "btLoadFromDB";
+            this.btLoadFromDB.Size = new System.Drawing.Size(150, 23);
+            this.btLoadFromDB.TabIndex = 27;
+            this.btLoadFromDB.Text = "Загрузить полигон из БД";
+            this.btLoadFromDB.UseVisualStyleBackColor = true;
+            this.btLoadFromDB.Click += new System.EventHandler(this.btLoadFromDB_Click);
+            // 
+            // lbNamePolygonBD
+            // 
+            this.lbNamePolygonBD.AutoSize = true;
+            this.lbNamePolygonBD.Location = new System.Drawing.Point(527, 81);
+            this.lbNamePolygonBD.Name = "lbNamePolygonBD";
+            this.lbNamePolygonBD.Size = new System.Drawing.Size(110, 13);
+            this.lbNamePolygonBD.TabIndex = 28;
+            this.lbNamePolygonBD.Text = "Имя полигона в БД:";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1135, 514);
+            this.Controls.Add(this.lbNamePolygonBD);
+            this.Controls.Add(this.btLoadFromDB);
+            this.Controls.Add(this.cbPolygonsInBD);
             this.Controls.Add(this.btSaveToDB);
             this.Controls.Add(this.gbPolygons);
             this.Controls.Add(this.gbUnion);
@@ -369,6 +402,7 @@
             this.Controls.Add(this.btDrawPolygon);
             this.Name = "Form1";
             this.Text = "Polygon";
+            this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.workSpace)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbUnion)).EndInit();
             this.gbRadioButton.ResumeLayout(false);
@@ -416,6 +450,9 @@
         private System.Windows.Forms.Label lbWorkSpace;
         private System.Windows.Forms.GroupBox gbPolygons;
         private System.Windows.Forms.Button btSaveToDB;
+        private System.Windows.Forms.ComboBox cbPolygonsInBD;
+        private System.Windows.Forms.Button btLoadFromDB;
+        private System.Windows.Forms.Label lbNamePolygonBD;
     }
 }
 

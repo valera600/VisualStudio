@@ -14,6 +14,7 @@ using System.Xml.Serialization;
 using System.Xml;
 using System.Data.SqlTypes;
 using Microsoft.VisualBasic;
+using System.Data.SqlClient;
 
 namespace polygon
 {
@@ -366,7 +367,11 @@ namespace polygon
             {
                 for (int i = 0; i < n; i++ )
                     if (polygons[i].pointCollection.Count > 0)
+                    {
                         gr.DrawPolygon(Pens.Black, polygons[i].pointCollection.ToArray());
+                        if (cbFillPolygon.Checked)
+                            gr.FillPolygon(Brushes.Red, polygons[i].pointCollection.ToArray());
+                    }
                 if (unionLines.Count > 0)
                     foreach (Line line in unionLines)
                         gr.DrawLine(Pens.Red, (new Point(line.a.X + workSpace.Width + 15, line.a.Y)), (new Point(line.b.X +workSpace.Width + 15, line.b.Y)));
@@ -576,9 +581,6 @@ namespace polygon
             try
             {
                 DatabaseDataSetTableAdapters.PolygonsTableAdapter adapter = new DatabaseDataSetTableAdapters.PolygonsTableAdapter();
-                //DatabaseDataSet.PolygonsDataTable table = new DatabaseDataSet.PolygonsDataTable();
-                //adapter.Fill(table);
-                //adapter.GetData();
                 
                 if (!polygons[currentPolygon].isBadPolygon())
                 {
@@ -593,7 +595,10 @@ namespace polygon
                         name = Interaction.InputBox("Введите имя полигона:", "Имя полигона", "Имя полигона не может быть пустым");
                     } while (name == "");
                     if (adapter.Insert(name, newXml) == 1)
+                    {
+                        updateListPolygons();
                         MessageBox.Show("Полигон добавлен в БД!");
+                    }
                     else
                         MessageBox.Show("Ошибка добавления полигона!");
                 }
@@ -615,6 +620,83 @@ namespace polygon
             }
         }
 
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            updateListPolygons();
+        }
 
+        private DatabaseDataSet.PolygonsDataTable getPolygons()
+        {
+            DatabaseDataSetTableAdapters.PolygonsTableAdapter adapter = new DatabaseDataSetTableAdapters.PolygonsTableAdapter();
+            DatabaseDataSet.PolygonsDataTable table = new DatabaseDataSet.PolygonsDataTable();
+            try
+            {
+                adapter.Fill(table);
+                adapter.GetData();
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+            return table;
+        }
+
+        private void updateListPolygons()
+        {
+            try
+            {
+                DatabaseDataSet.PolygonsDataTable table = getPolygons();
+                cbPolygonsInBD.Items.Clear();
+                foreach (DatabaseDataSet.PolygonsRow polygonRow in table)
+                {
+                    cbPolygonsInBD.Items.Add(polygonRow.Name);
+                }
+                if (cbPolygonsInBD.Items.Count > 0)
+                    cbPolygonsInBD.SelectedIndex = 0;
+            }
+            catch(Exception ex)
+            {
+                ex.ToString();
+            }
+        }
+
+        private void btLoadFromDB_Click(object sender, EventArgs e)
+        {
+            String xmlPolygon;
+            using (SqlConnection connection = new SqlConnection(Properties.Settings.Default.DatabaseConnectionString))
+            {
+                SqlCommand command = new SqlCommand("Select points from dbo.polygons where name=N'"+cbPolygonsInBD.SelectedItem+"'", connection);
+                command.Connection.Open();
+                xmlPolygon = (String)command.ExecuteScalar();
+            }
+            TextReader reader = null;
+            try
+            {
+                var serializer = new XmlSerializer(typeof(Polygon));
+                reader = new StringReader(xmlPolygon);
+                Polygon newPolygon = (Polygon)serializer.Deserialize(reader);
+                if(!newPolygon.isBadPolygon())
+                {
+                    polygons[currentPolygon] = newPolygon;
+                    updateGrid(currentPolygon);
+                    ReDraw();
+                    btAddPoint.Enabled = true;
+                    cbFillPolygon.Enabled = true;
+                }
+                else 
+                {
+                    MessageBox.Show("Полигон имеет неверный формат и не будет загружен!");
+                }
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+            finally
+            {
+                if (reader != null)
+                    reader.Close();
+            }
+        }
     }
 }
