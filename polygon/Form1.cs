@@ -528,8 +528,6 @@ namespace polygon
             {
                 if (writer != null)
                     writer.Close();
-                if (myStream != null)
-                    myStream.Close();
             }
         }
 
@@ -569,8 +567,6 @@ namespace polygon
             {
                 if (reader != null)
                     reader.Close();
-                if (myStream != null)
-                    myStream.Close();
             }
         }
 
@@ -615,8 +611,6 @@ namespace polygon
             {
                 if (writer != null)
                     writer.Close();
-                if (myStream != null)
-                    myStream.Close();
             }
         }
 
@@ -663,39 +657,46 @@ namespace polygon
         private void btLoadFromDB_Click(object sender, EventArgs e)
         {
             String xmlPolygon;
-            using (SqlConnection connection = new SqlConnection(Properties.Settings.Default.DatabaseConnectionString))
+            if (cbPolygonsInBD.SelectedItem != null)
             {
-                SqlCommand command = new SqlCommand("Select points from dbo.polygons where name=N'"+cbPolygonsInBD.SelectedItem+"'", connection);
-                command.Connection.Open();
-                xmlPolygon = (String)command.ExecuteScalar();
-            }
-            TextReader reader = null;
-            try
-            {
-                var serializer = new XmlSerializer(typeof(Polygon));
-                reader = new StringReader(xmlPolygon);
-                Polygon newPolygon = (Polygon)serializer.Deserialize(reader);
-                if(!newPolygon.isBadPolygon())
+                using (SqlConnection connection = new SqlConnection(Properties.Settings.Default.DatabaseConnectionString))
                 {
-                    polygons[currentPolygon] = newPolygon;
-                    updateGrid(currentPolygon);
-                    ReDraw();
-                    btAddPoint.Enabled = true;
-                    cbFillPolygon.Enabled = true;
+                    SqlCommand command = new SqlCommand("Select points from dbo.polygons where name=N'" + cbPolygonsInBD.SelectedItem + "'", connection);
+                    command.Connection.Open();
+                    xmlPolygon = (String)command.ExecuteScalar();
                 }
-                else 
+                TextReader reader = null;
+                try
                 {
-                    MessageBox.Show("Полигон имеет неверный формат и не будет загружен!");
+                    var serializer = new XmlSerializer(typeof(Polygon));
+                    reader = new StringReader(xmlPolygon);
+                    Polygon newPolygon = (Polygon)serializer.Deserialize(reader);
+                    if (!newPolygon.isBadPolygon())
+                    {
+                        polygons[currentPolygon] = newPolygon;
+                        updateGrid(currentPolygon);
+                        ReDraw();
+                        btAddPoint.Enabled = true;
+                        cbFillPolygon.Enabled = true;
+                    }
+                    else
+                    {
+                        MessageBox.Show("Полигон имеет неверный формат и не будет загружен!");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToString());
+                }
+                finally
+                {
+                    if (reader != null)
+                        reader.Close();
                 }
             }
-            catch(Exception ex)
+            else
             {
-                MessageBox.Show(ex.ToString());
-            }
-            finally
-            {
-                if (reader != null)
-                    reader.Close();
+                MessageBox.Show("Полигон для загрузки не выбран!");
             }
         }
     }
