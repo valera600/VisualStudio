@@ -35,7 +35,6 @@
             this.btStopPolygon = new System.Windows.Forms.Button();
             this.cbFillPolygon = new System.Windows.Forms.CheckBox();
             this.btUnion = new System.Windows.Forms.Button();
-            this.tbLog = new System.Windows.Forms.TextBox();
             this.pbUnion = new System.Windows.Forms.PictureBox();
             this.printDoc = new System.Drawing.Printing.PrintDocument();
             this.btPrint = new System.Windows.Forms.Button();
@@ -54,6 +53,11 @@
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.btLoadFromFile = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.gbUnion = new System.Windows.Forms.GroupBox();
+            this.lbPolygon1 = new System.Windows.Forms.Label();
+            this.lbPolygon2 = new System.Windows.Forms.Label();
+            this.lbWorkSpace = new System.Windows.Forms.Label();
+            this.gbPolygons = new System.Windows.Forms.GroupBox();
             ((System.ComponentModel.ISupportInitialize)(this.workSpace)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbUnion)).BeginInit();
             this.gbRadioButton.SuspendLayout();
@@ -61,6 +65,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.bindingSourcePolygon1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSourcePolygon2)).BeginInit();
+            this.gbUnion.SuspendLayout();
+            this.gbPolygons.SuspendLayout();
             this.SuspendLayout();
             // 
             // workSpace
@@ -68,7 +74,7 @@
             this.workSpace.BackColor = System.Drawing.Color.White;
             this.workSpace.Cursor = System.Windows.Forms.Cursors.Cross;
             this.workSpace.Enabled = false;
-            this.workSpace.Location = new System.Drawing.Point(145, 131);
+            this.workSpace.Location = new System.Drawing.Point(136, 23);
             this.workSpace.Name = "workSpace";
             this.workSpace.Size = new System.Drawing.Size(358, 350);
             this.workSpace.TabIndex = 0;
@@ -118,19 +124,10 @@
             this.btUnion.UseVisualStyleBackColor = true;
             this.btUnion.Click += new System.EventHandler(this.btUnion_Click);
             // 
-            // tbLog
-            // 
-            this.tbLog.Location = new System.Drawing.Point(569, 39);
-            this.tbLog.Multiline = true;
-            this.tbLog.Name = "tbLog";
-            this.tbLog.ReadOnly = true;
-            this.tbLog.Size = new System.Drawing.Size(361, 86);
-            this.tbLog.TabIndex = 8;
-            // 
             // pbUnion
             // 
             this.pbUnion.BackColor = System.Drawing.Color.White;
-            this.pbUnion.Location = new System.Drawing.Point(642, 130);
+            this.pbUnion.Location = new System.Drawing.Point(22, 28);
             this.pbUnion.Name = "pbUnion";
             this.pbUnion.Size = new System.Drawing.Size(388, 351);
             this.pbUnion.TabIndex = 9;
@@ -218,7 +215,7 @@
             this.dataGridView1.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.DisplayedCells;
             this.dataGridView1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(12, 130);
+            this.dataGridView1.Location = new System.Drawing.Point(3, 23);
             this.dataGridView1.MultiSelect = false;
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.ReadOnly = true;
@@ -249,7 +246,7 @@
             this.dataGridView2.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.DisplayedCells;
             this.dataGridView2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.dataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView2.Location = new System.Drawing.Point(509, 131);
+            this.dataGridView2.Location = new System.Drawing.Point(500, 23);
             this.dataGridView2.MultiSelect = false;
             this.dataGridView2.Name = "dataGridView2";
             this.dataGridView2.ReadOnly = true;
@@ -290,26 +287,74 @@
             // 
             this.openFileDialog1.Filter = "Xml файлы|*.xml|Все файлы|*.*";
             // 
+            // gbUnion
+            // 
+            this.gbUnion.Controls.Add(this.pbUnion);
+            this.gbUnion.Location = new System.Drawing.Point(678, 122);
+            this.gbUnion.Name = "gbUnion";
+            this.gbUnion.Size = new System.Drawing.Size(432, 390);
+            this.gbUnion.TabIndex = 20;
+            this.gbUnion.TabStop = false;
+            this.gbUnion.Text = "Объединение:";
+            // 
+            // lbPolygon1
+            // 
+            this.lbPolygon1.AutoSize = true;
+            this.lbPolygon1.Location = new System.Drawing.Point(3, 7);
+            this.lbPolygon1.Name = "lbPolygon1";
+            this.lbPolygon1.Size = new System.Drawing.Size(94, 13);
+            this.lbPolygon1.TabIndex = 21;
+            this.lbPolygon1.Text = "Первый полигон:";
+            // 
+            // lbPolygon2
+            // 
+            this.lbPolygon2.AutoSize = true;
+            this.lbPolygon2.Location = new System.Drawing.Point(497, 7);
+            this.lbPolygon2.Name = "lbPolygon2";
+            this.lbPolygon2.Size = new System.Drawing.Size(90, 13);
+            this.lbPolygon2.TabIndex = 22;
+            this.lbPolygon2.Text = "Второй полигон:";
+            // 
+            // lbWorkSpace
+            // 
+            this.lbWorkSpace.AutoSize = true;
+            this.lbWorkSpace.Location = new System.Drawing.Point(133, 7);
+            this.lbWorkSpace.Name = "lbWorkSpace";
+            this.lbWorkSpace.Size = new System.Drawing.Size(96, 13);
+            this.lbWorkSpace.TabIndex = 23;
+            this.lbWorkSpace.Text = "Рабочая область:";
+            // 
+            // gbPolygons
+            // 
+            this.gbPolygons.Controls.Add(this.lbWorkSpace);
+            this.gbPolygons.Controls.Add(this.lbPolygon2);
+            this.gbPolygons.Controls.Add(this.lbPolygon1);
+            this.gbPolygons.Controls.Add(this.dataGridView2);
+            this.gbPolygons.Controls.Add(this.dataGridView1);
+            this.gbPolygons.Controls.Add(this.workSpace);
+            this.gbPolygons.Location = new System.Drawing.Point(9, 128);
+            this.gbPolygons.Name = "gbPolygons";
+            this.gbPolygons.Size = new System.Drawing.Size(642, 383);
+            this.gbPolygons.TabIndex = 24;
+            this.gbPolygons.TabStop = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1135, 514);
+            this.Controls.Add(this.gbPolygons);
+            this.Controls.Add(this.gbUnion);
             this.Controls.Add(this.btLoadFromFile);
             this.Controls.Add(this.btSaveToFile);
-            this.Controls.Add(this.dataGridView2);
             this.Controls.Add(this.btAddPoint);
-            this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.btPreview);
             this.Controls.Add(this.gbRadioButton);
             this.Controls.Add(this.btPrint);
-            this.Controls.Add(this.pbUnion);
-            this.Controls.Add(this.tbLog);
             this.Controls.Add(this.btUnion);
             this.Controls.Add(this.cbFillPolygon);
             this.Controls.Add(this.btStopPolygon);
             this.Controls.Add(this.btDrawPolygon);
-            this.Controls.Add(this.workSpace);
             this.Name = "Form1";
             this.Text = "Polygon";
             ((System.ComponentModel.ISupportInitialize)(this.workSpace)).EndInit();
@@ -320,6 +365,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.bindingSourcePolygon1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSourcePolygon2)).EndInit();
+            this.gbUnion.ResumeLayout(false);
+            this.gbPolygons.ResumeLayout(false);
+            this.gbPolygons.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -332,7 +380,6 @@
         private System.Windows.Forms.Button btStopPolygon;
         private System.Windows.Forms.CheckBox cbFillPolygon;
         private System.Windows.Forms.Button btUnion;
-        private System.Windows.Forms.TextBox tbLog;
         private System.Windows.Forms.PictureBox pbUnion;
         private System.Drawing.Printing.PrintDocument printDoc;
         private System.Windows.Forms.Button btPrint;
@@ -351,6 +398,11 @@
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.Button btLoadFromFile;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.GroupBox gbUnion;
+        private System.Windows.Forms.Label lbPolygon1;
+        private System.Windows.Forms.Label lbPolygon2;
+        private System.Windows.Forms.Label lbWorkSpace;
+        private System.Windows.Forms.GroupBox gbPolygons;
     }
 }
 

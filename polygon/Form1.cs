@@ -136,14 +136,12 @@ namespace polygon
                             intersect = new Point();
                         if (!intersect.IsEmpty)
                         {
-                            tbLog.Text += ("Точка пересечения " + intersect.ToString()) + Environment.NewLine;
                             intersectPoints.Add(intersect);
                             //для первого полигона
                             foreach (Line line in newOne)
                             {
                                 if (line.hasPoint(intersect))
                                 {
-                                    tbLog.Text += ("Точка есть в А") + Environment.NewLine;
                                     //запоминаем точки отрезка с точкой пересечения 
                                     Point a = new Point(line.a.X, line.a.Y);
                                     Point b = new Point(line.b.X, line.b.Y);
@@ -160,7 +158,6 @@ namespace polygon
                             {
                                 if (line.hasPoint(intersect))
                                 {
-                                    tbLog.Text += ("Точка есть в Б") + Environment.NewLine;
                                     //запоминаем точки отрезка с точкой пересечения 
                                     Point a = new Point(line.a.X, line.a.Y);
                                     Point b = new Point(line.b.X, line.b.Y);
@@ -548,13 +545,25 @@ namespace polygon
                     {
                         var serializer = new XmlSerializer(typeof(Polygon));
                         reader = new StreamReader(myStream);
-                        polygons[currentPolygon] = (Polygon)serializer.Deserialize(reader);
-                        updateGrid(currentPolygon);
-                        ReDraw();
-                        if (polygons[currentPolygon].getCountPoints() > 2)
+                        Polygon newPolygon = (Polygon)serializer.Deserialize(reader);
+                        if (!newPolygon.isBadPolygon())
+                        {
+                            polygons[currentPolygon] = newPolygon;
+                            updateGrid(currentPolygon);
+                            ReDraw();
                             btAddPoint.Enabled = true;
+                            cbFillPolygon.Enabled = true;
+                        }
+                        else
+                        {
+                            MessageBox.Show("Файл содержит недопустимый полигон!");
+                        }
                     }
                 }
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
             }
             finally
             {

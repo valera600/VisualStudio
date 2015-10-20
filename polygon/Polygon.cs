@@ -134,5 +134,37 @@ namespace polygon
             }
             return lines;
         }
+
+        public bool isBadPolygon()
+        {
+            bool badPolygon = false;
+
+            if (getCountPoints() > 2)
+            {
+                Collection<Line> lines = getLinesCollection();
+                Line lineA, lineB;
+                for(int i = 0; i < getCountPoints()-1;i++)
+                {
+                    for(int j = i+1; j<getCountPoints();j++)
+                    {
+                        lineA = lines[i];
+                        lineB = lines[j];
+                        if (lineA.intersect(lineB) || (lineA.a == lineA.b) || (lineB.a == lineB.b) || (lineA.hasPoint(lineB.a) && lineA.hasPoint(lineB.b)) || (lineB.hasPoint(lineA.a) && lineB.hasPoint(lineA.b)))
+                        {
+                            badPolygon = true;
+                            break;
+                        }
+                    }
+                    if (badPolygon)
+                        break;
+                }
+            }
+            else
+            {
+                badPolygon = true;
+            }
+
+            return badPolygon;
+        }
     }
 }
