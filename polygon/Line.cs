@@ -8,7 +8,7 @@ using System.Drawing;
 
 namespace polygon
 {
-    class Line
+    public class Line
     {
         public Point a { get; set; }
         public Point b { get; set; }

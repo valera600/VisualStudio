@@ -4,10 +4,12 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml.Serialization;
 
 namespace polygon
 {
@@ -70,6 +72,12 @@ namespace polygon
                 if(isAddPoint)
                 {
                     isAddPoint = false;
+                    if(polygons[currentPolygon].isBadLine(newPoint, polygons[currentPolygon].getFirstPoint()))
+                    {
+                        MessageBox.Show("Добавление этой точки даст самопересечение для отрезка из новой точки в первую!");
+                        polygons[currentPolygon].pointCollection.Remove(newPoint);
+                        updateGrid(currentPolygon);
+                    }
                     btStopPolygon_Click(sender, e);
                 }
             }
@@ -447,7 +455,7 @@ namespace polygon
             {
                 currentPolygon = 1;
             }
-            if (polygons[currentPolygon].getCountPoints() > 3)
+            if (polygons[currentPolygon].getCountPoints() > 2)
             {
                 btAddPoint.Enabled = true;
             }
@@ -498,5 +506,65 @@ namespace polygon
                 MessageBox.Show("Полигон должен существовать!");
             }
         }
+
+        private void btSaveToFile_Click(object sender, EventArgs e)
+        {
+            Stream myStream = null;
+            TextWriter writer = null;
+            try
+            {
+                if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+                {
+                    if ((myStream = saveFileDialog1.OpenFile()) != null)
+                    {
+                        var serializer = new XmlSerializer(typeof(Polygon));
+                        writer = new StreamWriter(myStream);
+                        serializer.Serialize(writer, polygons[currentPolygon]);
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+            finally
+            {
+                if (writer != null)
+                    writer.Close();
+                if (myStream != null)
+                    myStream.Close();
+            }
+        }
+
+        private void btLoadFromFile_Click(object sender, EventArgs e)
+        {
+            TextReader reader = null;
+            Stream myStream = null;
+            try
+            {
+                if(openFileDialog1.ShowDialog() == DialogResult.OK)
+                {
+                    if ((myStream = openFileDialog1.OpenFile()) != null)
+                    {
+                        var serializer = new XmlSerializer(typeof(Polygon));
+                        reader = new StreamReader(myStream);
+                        polygons[currentPolygon] = (Polygon)serializer.Deserialize(reader);
+                        updateGrid(currentPolygon);
+                        ReDraw();
+                        if (polygons[currentPolygon].getCountPoints() > 2)
+                            btAddPoint.Enabled = true;
+                    }
+                }
+            }
+            finally
+            {
+                if (reader != null)
+                    reader.Close();
+                if (myStream != null)
+                    myStream.Close();
+            }
+        }
+
+
     }
 }

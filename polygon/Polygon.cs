@@ -12,7 +12,7 @@ namespace polygon
     /// <summary>
     /// Данный класс представляет полигон, который описан коллекцией точек
     /// </summary>
-    class Polygon
+    public class Polygon
     {
         public Collection<Point> pointCollection { get; set; }
 

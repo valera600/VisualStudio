@@ -46,16 +46,18 @@
             this.gbRadioButton = new System.Windows.Forms.GroupBox();
             this.btPreview = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.dsPolygon = new polygon.dsPolygon();
             this.bindingSourcePolygon1 = new System.Windows.Forms.BindingSource(this.components);
             this.btAddPoint = new System.Windows.Forms.Button();
             this.dataGridView2 = new System.Windows.Forms.DataGridView();
             this.bindingSourcePolygon2 = new System.Windows.Forms.BindingSource(this.components);
+            this.btSaveToFile = new System.Windows.Forms.Button();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.btLoadFromFile = new System.Windows.Forms.Button();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.workSpace)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbUnion)).BeginInit();
             this.gbRadioButton.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dsPolygon)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSourcePolygon1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSourcePolygon2)).BeginInit();
@@ -118,11 +120,11 @@
             // 
             // tbLog
             // 
-            this.tbLog.Location = new System.Drawing.Point(392, 35);
+            this.tbLog.Location = new System.Drawing.Point(569, 39);
             this.tbLog.Multiline = true;
             this.tbLog.Name = "tbLog";
             this.tbLog.ReadOnly = true;
-            this.tbLog.Size = new System.Drawing.Size(310, 86);
+            this.tbLog.Size = new System.Drawing.Size(361, 86);
             this.tbLog.TabIndex = 8;
             // 
             // pbUnion
@@ -220,15 +222,10 @@
             this.dataGridView1.MultiSelect = false;
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.ReadOnly = true;
-            this.dataGridView1.Size = new System.Drawing.Size(127, 303);
+            this.dataGridView1.Size = new System.Drawing.Size(127, 351);
             this.dataGridView1.TabIndex = 15;
             this.dataGridView1.UserDeletedRow += new System.Windows.Forms.DataGridViewRowEventHandler(this.dataGridView_UserDeletedRow);
             this.dataGridView1.UserDeletingRow += new System.Windows.Forms.DataGridViewRowCancelEventHandler(this.dataGridView_UserDeletingRow);
-            // 
-            // dsPolygon
-            // 
-            this.dsPolygon.DataSetName = "dsPolygon";
-            this.dsPolygon.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
             // 
             // bindingSourcePolygon1
             // 
@@ -256,7 +253,7 @@
             this.dataGridView2.MultiSelect = false;
             this.dataGridView2.Name = "dataGridView2";
             this.dataGridView2.ReadOnly = true;
-            this.dataGridView2.Size = new System.Drawing.Size(127, 303);
+            this.dataGridView2.Size = new System.Drawing.Size(127, 350);
             this.dataGridView2.TabIndex = 17;
             this.dataGridView2.UserDeletedRow += new System.Windows.Forms.DataGridViewRowEventHandler(this.dataGridView_UserDeletedRow);
             this.dataGridView2.UserDeletingRow += new System.Windows.Forms.DataGridViewRowCancelEventHandler(this.dataGridView_UserDeletingRow);
@@ -265,11 +262,41 @@
             // 
             this.bindingSourcePolygon2.AllowNew = true;
             // 
+            // btSaveToFile
+            // 
+            this.btSaveToFile.Location = new System.Drawing.Point(375, 49);
+            this.btSaveToFile.Name = "btSaveToFile";
+            this.btSaveToFile.Size = new System.Drawing.Size(128, 23);
+            this.btSaveToFile.TabIndex = 18;
+            this.btSaveToFile.Text = "Сохранить в файл";
+            this.btSaveToFile.UseVisualStyleBackColor = true;
+            this.btSaveToFile.Click += new System.EventHandler(this.btSaveToFile_Click);
+            // 
+            // saveFileDialog1
+            // 
+            this.saveFileDialog1.Filter = "Xml файлы|*.xml|Все файлы|*.*";
+            // 
+            // btLoadFromFile
+            // 
+            this.btLoadFromFile.Location = new System.Drawing.Point(375, 88);
+            this.btLoadFromFile.Name = "btLoadFromFile";
+            this.btLoadFromFile.Size = new System.Drawing.Size(128, 23);
+            this.btLoadFromFile.TabIndex = 19;
+            this.btLoadFromFile.Text = "Загрузить из файла";
+            this.btLoadFromFile.UseVisualStyleBackColor = true;
+            this.btLoadFromFile.Click += new System.EventHandler(this.btLoadFromFile_Click);
+            // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.Filter = "Xml файлы|*.xml|Все файлы|*.*";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1135, 514);
+            this.Controls.Add(this.btLoadFromFile);
+            this.Controls.Add(this.btSaveToFile);
             this.Controls.Add(this.dataGridView2);
             this.Controls.Add(this.btAddPoint);
             this.Controls.Add(this.dataGridView1);
@@ -290,7 +317,6 @@
             this.gbRadioButton.ResumeLayout(false);
             this.gbRadioButton.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dsPolygon)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSourcePolygon1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSourcePolygon2)).EndInit();
@@ -316,12 +342,15 @@
         private System.Windows.Forms.RadioButton rb2;
         private System.Windows.Forms.GroupBox gbRadioButton;
         private System.Windows.Forms.Button btPreview;
-        private dsPolygon dsPolygon;
         private System.Windows.Forms.BindingSource bindingSourcePolygon1;
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.Button btAddPoint;
         private System.Windows.Forms.DataGridView dataGridView2;
         private System.Windows.Forms.BindingSource bindingSourcePolygon2;
+        private System.Windows.Forms.Button btSaveToFile;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
+        private System.Windows.Forms.Button btLoadFromFile;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
     }
 }
 
