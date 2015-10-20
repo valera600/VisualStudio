@@ -28,14 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.workSpace = new System.Windows.Forms.PictureBox();
             this.btDrawPolygon = new System.Windows.Forms.Button();
             this.btStopPolygon = new System.Windows.Forms.Button();
-            this.tbPointsPolygonA = new System.Windows.Forms.TextBox();
             this.cbFillPolygon = new System.Windows.Forms.CheckBox();
             this.btUnion = new System.Windows.Forms.Button();
-            this.tbPointsPolygonB = new System.Windows.Forms.TextBox();
             this.tbLog = new System.Windows.Forms.TextBox();
             this.pbUnion = new System.Windows.Forms.PictureBox();
             this.printDoc = new System.Drawing.Printing.PrintDocument();
@@ -46,18 +45,30 @@
             this.rb2 = new System.Windows.Forms.RadioButton();
             this.gbRadioButton = new System.Windows.Forms.GroupBox();
             this.btPreview = new System.Windows.Forms.Button();
+            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.dsPolygon = new polygon.dsPolygon();
+            this.bindingSourcePolygon1 = new System.Windows.Forms.BindingSource(this.components);
+            this.btAddPoint = new System.Windows.Forms.Button();
+            this.dataGridView2 = new System.Windows.Forms.DataGridView();
+            this.bindingSourcePolygon2 = new System.Windows.Forms.BindingSource(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.workSpace)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbUnion)).BeginInit();
             this.gbRadioButton.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dsPolygon)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.bindingSourcePolygon1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.bindingSourcePolygon2)).BeginInit();
             this.SuspendLayout();
             // 
             // workSpace
             // 
             this.workSpace.BackColor = System.Drawing.Color.White;
             this.workSpace.Cursor = System.Windows.Forms.Cursors.Cross;
-            this.workSpace.Location = new System.Drawing.Point(144, 131);
+            this.workSpace.Enabled = false;
+            this.workSpace.Location = new System.Drawing.Point(145, 131);
             this.workSpace.Name = "workSpace";
-            this.workSpace.Size = new System.Drawing.Size(429, 370);
+            this.workSpace.Size = new System.Drawing.Size(358, 350);
             this.workSpace.TabIndex = 0;
             this.workSpace.TabStop = false;
             this.workSpace.MouseUp += new System.Windows.Forms.MouseEventHandler(this.workSpace_MouseUp);
@@ -83,17 +94,6 @@
             this.btStopPolygon.UseVisualStyleBackColor = true;
             this.btStopPolygon.Click += new System.EventHandler(this.btStopPolygon_Click);
             // 
-            // tbPointsPolygonA
-            // 
-            this.tbPointsPolygonA.Location = new System.Drawing.Point(12, 138);
-            this.tbPointsPolygonA.Multiline = true;
-            this.tbPointsPolygonA.Name = "tbPointsPolygonA";
-            this.tbPointsPolygonA.ReadOnly = true;
-            this.tbPointsPolygonA.Size = new System.Drawing.Size(106, 363);
-            this.tbPointsPolygonA.TabIndex = 3;
-            this.tbPointsPolygonA.TabStop = false;
-            this.tbPointsPolygonA.Text = "Точки полигона А:";
-            // 
             // cbFillPolygon
             // 
             this.cbFillPolygon.AutoSize = true;
@@ -116,17 +116,6 @@
             this.btUnion.UseVisualStyleBackColor = true;
             this.btUnion.Click += new System.EventHandler(this.btUnion_Click);
             // 
-            // tbPointsPolygonB
-            // 
-            this.tbPointsPolygonB.Location = new System.Drawing.Point(1017, 131);
-            this.tbPointsPolygonB.Multiline = true;
-            this.tbPointsPolygonB.Name = "tbPointsPolygonB";
-            this.tbPointsPolygonB.ReadOnly = true;
-            this.tbPointsPolygonB.Size = new System.Drawing.Size(106, 363);
-            this.tbPointsPolygonB.TabIndex = 7;
-            this.tbPointsPolygonB.TabStop = false;
-            this.tbPointsPolygonB.Text = "Точки полигона Б:";
-            // 
             // tbLog
             // 
             this.tbLog.Location = new System.Drawing.Point(392, 35);
@@ -139,9 +128,9 @@
             // pbUnion
             // 
             this.pbUnion.BackColor = System.Drawing.Color.White;
-            this.pbUnion.Location = new System.Drawing.Point(579, 130);
+            this.pbUnion.Location = new System.Drawing.Point(642, 130);
             this.pbUnion.Name = "pbUnion";
-            this.pbUnion.Size = new System.Drawing.Size(432, 371);
+            this.pbUnion.Size = new System.Drawing.Size(388, 351);
             this.pbUnion.TabIndex = 9;
             this.pbUnion.TabStop = false;
             // 
@@ -186,6 +175,7 @@
             this.rb1.TabStop = true;
             this.rb1.Text = "Первый";
             this.rb1.UseVisualStyleBackColor = true;
+            this.rb1.CheckedChanged += new System.EventHandler(this.rbChange);
             // 
             // rb2
             // 
@@ -196,6 +186,7 @@
             this.rb2.TabIndex = 12;
             this.rb2.Text = "Второй";
             this.rb2.UseVisualStyleBackColor = true;
+            this.rb2.CheckedChanged += new System.EventHandler(this.rbChange);
             // 
             // gbRadioButton
             // 
@@ -218,20 +209,77 @@
             this.btPreview.UseVisualStyleBackColor = true;
             this.btPreview.Click += new System.EventHandler(this.btPreview_Click);
             // 
+            // dataGridView1
+            // 
+            this.dataGridView1.AllowUserToAddRows = false;
+            this.dataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.DisplayedCells;
+            this.dataGridView1.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.DisplayedCells;
+            this.dataGridView1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView1.Location = new System.Drawing.Point(12, 130);
+            this.dataGridView1.MultiSelect = false;
+            this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.ReadOnly = true;
+            this.dataGridView1.Size = new System.Drawing.Size(127, 303);
+            this.dataGridView1.TabIndex = 15;
+            this.dataGridView1.UserDeletedRow += new System.Windows.Forms.DataGridViewRowEventHandler(this.dataGridView_UserDeletedRow);
+            this.dataGridView1.UserDeletingRow += new System.Windows.Forms.DataGridViewRowCancelEventHandler(this.dataGridView_UserDeletingRow);
+            // 
+            // dsPolygon
+            // 
+            this.dsPolygon.DataSetName = "dsPolygon";
+            this.dsPolygon.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
+            // 
+            // bindingSourcePolygon1
+            // 
+            this.bindingSourcePolygon1.AllowNew = true;
+            // 
+            // btAddPoint
+            // 
+            this.btAddPoint.Enabled = false;
+            this.btAddPoint.Location = new System.Drawing.Point(14, 91);
+            this.btAddPoint.Name = "btAddPoint";
+            this.btAddPoint.Size = new System.Drawing.Size(220, 30);
+            this.btAddPoint.TabIndex = 16;
+            this.btAddPoint.Text = "Добавить точку";
+            this.btAddPoint.UseVisualStyleBackColor = true;
+            this.btAddPoint.Click += new System.EventHandler(this.btAddPoint_Click);
+            // 
+            // dataGridView2
+            // 
+            this.dataGridView2.AllowUserToAddRows = false;
+            this.dataGridView2.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.DisplayedCells;
+            this.dataGridView2.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.DisplayedCells;
+            this.dataGridView2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.dataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView2.Location = new System.Drawing.Point(509, 131);
+            this.dataGridView2.MultiSelect = false;
+            this.dataGridView2.Name = "dataGridView2";
+            this.dataGridView2.ReadOnly = true;
+            this.dataGridView2.Size = new System.Drawing.Size(127, 303);
+            this.dataGridView2.TabIndex = 17;
+            this.dataGridView2.UserDeletedRow += new System.Windows.Forms.DataGridViewRowEventHandler(this.dataGridView_UserDeletedRow);
+            this.dataGridView2.UserDeletingRow += new System.Windows.Forms.DataGridViewRowCancelEventHandler(this.dataGridView_UserDeletingRow);
+            // 
+            // bindingSourcePolygon2
+            // 
+            this.bindingSourcePolygon2.AllowNew = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1135, 514);
+            this.Controls.Add(this.dataGridView2);
+            this.Controls.Add(this.btAddPoint);
+            this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.btPreview);
             this.Controls.Add(this.gbRadioButton);
             this.Controls.Add(this.btPrint);
             this.Controls.Add(this.pbUnion);
             this.Controls.Add(this.tbLog);
-            this.Controls.Add(this.tbPointsPolygonB);
             this.Controls.Add(this.btUnion);
             this.Controls.Add(this.cbFillPolygon);
-            this.Controls.Add(this.tbPointsPolygonA);
             this.Controls.Add(this.btStopPolygon);
             this.Controls.Add(this.btDrawPolygon);
             this.Controls.Add(this.workSpace);
@@ -241,6 +289,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.pbUnion)).EndInit();
             this.gbRadioButton.ResumeLayout(false);
             this.gbRadioButton.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dsPolygon)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.bindingSourcePolygon1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.bindingSourcePolygon2)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -251,10 +304,8 @@
         private System.Windows.Forms.PictureBox workSpace;
         private System.Windows.Forms.Button btDrawPolygon;
         private System.Windows.Forms.Button btStopPolygon;
-        private System.Windows.Forms.TextBox tbPointsPolygonA;
         private System.Windows.Forms.CheckBox cbFillPolygon;
         private System.Windows.Forms.Button btUnion;
-        private System.Windows.Forms.TextBox tbPointsPolygonB;
         private System.Windows.Forms.TextBox tbLog;
         private System.Windows.Forms.PictureBox pbUnion;
         private System.Drawing.Printing.PrintDocument printDoc;
@@ -265,6 +316,12 @@
         private System.Windows.Forms.RadioButton rb2;
         private System.Windows.Forms.GroupBox gbRadioButton;
         private System.Windows.Forms.Button btPreview;
+        private dsPolygon dsPolygon;
+        private System.Windows.Forms.BindingSource bindingSourcePolygon1;
+        private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.Button btAddPoint;
+        private System.Windows.Forms.DataGridView dataGridView2;
+        private System.Windows.Forms.BindingSource bindingSourcePolygon2;
     }
 }
 

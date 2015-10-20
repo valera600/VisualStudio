@@ -14,11 +14,12 @@ namespace polygon
     public partial class Form1 : Form
     {
         const int n = 2; //используем в программе 2 полигона
+        bool isAddPoint = false;
         Graphics g;
         Graphics gUnion;
         Collection<Line> unionLines = new Collection<Line>();   //линии полигона объединения
         Polygon[] polygons = new Polygon[n];
-        int currentPolygon = -1;    //хранит номер редактируемого полигона в данный момент {-1 - ни один, 0 - первый, 1 - второй,}
+        int currentPolygon = 0;    //хранит номер редактируемого полигона в данный момент {0 - первый, 1 - второй,}
         public Form1()
         {
             InitializeComponent();
@@ -26,41 +27,37 @@ namespace polygon
             gUnion = pbUnion.CreateGraphics();
             for (int i = 0; i < n; i++)
                 polygons[i] = new Polygon();
+            dataGridView1.AutoGenerateColumns = true;
+            dataGridView1.DataSource = bindingSourcePolygon1;
+            dataGridView2.AutoGenerateColumns = true;
+            dataGridView2.DataSource = bindingSourcePolygon2;
         }
 
         private void btDrawPolygon_Click(object sender, EventArgs e)
         {
-            if (currentPolygon == -1)
-            {
-                if (rb1.Checked)
-                {
-                    currentPolygon = 0;
-                    tbPointsPolygonA.Text = "A:";
-                }
-                else
-                {
-                    currentPolygon = 1;
-                    tbPointsPolygonB.Text = "B:";
-                }
-                polygons[currentPolygon].Clear();
-                ReDraw();
-                btDrawPolygon.Enabled = false;    //отключаем кнопки запуска рисования
-                btStopPolygon.Enabled = true;  //включаем кнопку остановки рисования полигонов
-            }
+            workSpace.Enabled = true;
+            polygons[currentPolygon].pointCollection.Clear();
+            updateGrid(currentPolygon);
+            ReDraw();
+            btDrawPolygon.Enabled = false;    //отключаем кнопки запуска рисования
+            cbFillPolygon.Enabled = false;
+            btStopPolygon.Enabled = true;  //включаем кнопку остановки рисования полигонов
+            btAddPoint.Enabled = false;
+            gbRadioButton.Enabled = false;
+            dataGridView1.Enabled = false;
+            cbFillPolygon.Checked = false;
         }
 
         private void workSpace_MouseUp(object sender, MouseEventArgs e)
         {
-            if (currentPolygon != -1)
+            if (workSpace.Enabled)
             {
                 Point newPoint = new Point(e.X, e.Y);  //точка, которую добавил пользователь
                 Point lastPoint = polygons[currentPolygon].getLastPoint();
                 if (polygons[currentPolygon].addPoint(newPoint))
                 {
-                    if (currentPolygon == 0)
-                        tbPointsPolygonA.Text += (Environment.NewLine + newPoint.ToString());
-                    else
-                        tbPointsPolygonB.Text += (Environment.NewLine + newPoint.ToString());
+                    updateGrid(currentPolygon);
+                    
                     if (polygons[currentPolygon].getCountPoints() > 1)
                     {
                         g.DrawLine(Pens.Black, lastPoint, newPoint);    //рисуем отрезок к новой точке
@@ -69,6 +66,11 @@ namespace polygon
                     {
                         g.FillRectangle(Brushes.Black, newPoint.X, newPoint.Y, 1, 1);   //рисуем первую точку
                     }
+                }
+                if(isAddPoint)
+                {
+                    isAddPoint = false;
+                    btStopPolygon_Click(sender, e);
                 }
             }
             else
@@ -100,7 +102,6 @@ namespace polygon
 
         private void btUnion_Click(object sender, EventArgs e)
         {
-            
             Collection<Line> one, two, newOne, newTwo, union;
             one = polygons[0].getLinesCollection(); //линии первого полигона
             two = polygons[1].getLinesCollection(); //линии второго полигона
@@ -308,27 +309,28 @@ namespace polygon
         {
             try
             {
-                if (currentPolygon != -1)
+                if (polygons[currentPolygon].getCountPoints() > 2)
                 {
-                    if (polygons[currentPolygon].getCountPoints() > 2)
+                    if (!polygons[currentPolygon].isBadLine(polygons[currentPolygon].getLastPoint(),polygons[currentPolygon].getFirstPoint()))
                     {
-                        if (!polygons[currentPolygon].isBadPoint(polygons[currentPolygon].getFirstPoint()))
-                        {
-                            btDrawPolygon.Enabled = true;    //включаем кнопки запуска рисования 
-                            btStopPolygon.Enabled = false;  //выключаем кнопку остановки рисования полигонов
-                            g.DrawPolygon(Pens.Black, polygons[currentPolygon].pointCollection.ToArray());
-                            currentPolygon = -1; //на данный момент ни какой полигон не рисуется
-                            cbFillPolygon.Enabled = true;   //активируем функцию закраски полигонов
-                        }
-                        else
-                        {
-                            System.Windows.Forms.MessageBox.Show("Отрезок из последней точки в первую даёт самопересечение!");
-                        }
+                        btDrawPolygon.Enabled = true;    //включаем кнопки запуска рисования 
+                        btStopPolygon.Enabled = false;  //выключаем кнопку остановки рисования полигонов
+                        workSpace.Enabled = false;
+                        gbRadioButton.Enabled = true;
+                        ReDraw();
+                        cbFillPolygon.Enabled = true;   //активируем функцию закраски полигонов
+                        dataGridView1.Enabled = true;
+                        updateGrid(currentPolygon);
+                        btAddPoint.Enabled = true;
                     }
                     else
                     {
-                        MessageBox.Show("Полигон имеет меньше 3 точек!");
+                        System.Windows.Forms.MessageBox.Show("Отрезок из последней точки в первую даёт самопересечение!");
                     }
+                }
+                else
+                {
+                    MessageBox.Show("Полигон имеет меньше 3 точек!");
                 }
             }
             catch (Exception ex)
@@ -358,7 +360,7 @@ namespace polygon
                         gr.DrawPolygon(Pens.Black, polygons[i].pointCollection.ToArray());
                 if (unionLines.Count > 0)
                     foreach (Line line in unionLines)
-                        gr.DrawLine(Pens.Red, (new Point(line.a.X, line.a.Y + workSpace.Height)), (new Point(line.b.X, line.b.Y + workSpace.Height)));
+                        gr.DrawLine(Pens.Red, (new Point(line.a.X + workSpace.Width + 15, line.a.Y)), (new Point(line.b.X +workSpace.Width + 15, line.b.Y)));
             }
             catch(Exception ex)
             {
@@ -375,6 +377,126 @@ namespace polygon
         private void btPreview_Click(object sender, EventArgs e)
         {
             printPrevDialog.ShowDialog();
+        }
+
+        private void dataGridView_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
+        {
+            int cur;
+            DataGridView dgView = sender as DataGridView;
+            if (dgView.Name == "dataGridView1")
+                cur = 0;
+            else
+                cur = 1;
+            if (polygons[cur].pointCollection.Count > 3)
+            {
+                Point deletingPoint = polygons[cur].pointCollection[e.Row.Index];
+                Collection<Line> lines = polygons[cur].getLinesCollection();
+                Line newLine = new Line();
+                Line lineAB = new Line();
+                Line lineCD = new Line();
+                foreach (Line line in lines)
+                {
+                    if (line.b == deletingPoint)
+                    {
+                        newLine.a = line.a;
+                        lineAB = line;
+                    }
+                    if (line.a == deletingPoint)
+                    {
+                        newLine.b = line.b;
+                        lineCD = line;
+                    }
+                }
+                lines.Remove(lineAB);
+                lines.Remove(lineCD);
+
+                bool intersection = false;
+                foreach (Line line in lines)
+                {
+                    if (line.intersect(newLine))
+                    {
+                        intersection = true;
+                        break;
+                    }
+                }
+                if (!intersection)
+                {
+                    MessageBox.Show("Точка " + deletingPoint.ToString() + " успешно удалена");
+                }
+                else
+                {
+                    MessageBox.Show("Удаление данной точки даст самопересечение полигона!");
+                    e.Cancel = true;
+                }
+            }
+            else
+            {
+                MessageBox.Show("Удаление невозможно! Полигон имеет всего 3 точки!");
+                e.Cancel = true;
+            }
+            
+        }
+
+        private void rbChange(object sender, EventArgs e)
+        {
+            if (rb1.Checked)
+            {
+                currentPolygon = 0;
+            }
+            else
+            {
+                currentPolygon = 1;
+            }
+            if (polygons[currentPolygon].getCountPoints() > 3)
+            {
+                btAddPoint.Enabled = true;
+            }
+            else
+            {
+                btAddPoint.Enabled = false;
+            }
+        }
+
+        private void dataGridView_UserDeletedRow(object sender, DataGridViewRowEventArgs e)
+        {
+            ReDraw();
+        }
+
+        private void updateGrid(int cur)
+        {
+            if(cur == 0)
+            {
+                bindingSourcePolygon1.DataSource = null;
+                bindingSourcePolygon1.DataSource = polygons[0].pointCollection;
+            }
+            else
+            {
+                bindingSourcePolygon2.DataSource = null;
+                bindingSourcePolygon2.DataSource = polygons[1].pointCollection;
+            }
+        }
+
+        private void btAddPoint_Click(object sender, EventArgs e)
+        {
+            if (polygons[currentPolygon].getCountPoints() > 2)
+            {
+                isAddPoint = true;
+                workSpace.Enabled = true;
+                Line line = polygons[currentPolygon].getLinesCollection()[polygons[currentPolygon].getCountPoints() - 1];
+                ReDraw();
+                g.DrawLine(Pens.White, line.a, line.b);
+                g.Flush();
+                btDrawPolygon.Enabled = false;    //отключаем кнопки запуска рисования
+                cbFillPolygon.Enabled = false;
+                btStopPolygon.Enabled = true;  //включаем кнопку остановки рисования полигонов
+                gbRadioButton.Enabled = false;
+                dataGridView1.Enabled = false;
+                cbFillPolygon.Checked = false;
+            }
+            else
+            {
+                MessageBox.Show("Полигон должен существовать!");
+            }
         }
     }
 }
