@@ -58,14 +58,16 @@ namespace polygon
         {
             int countPoints = pointCollection.Count;
             Boolean badLine = false;   //даёт ли точка самопересечение полигона
-            if (countPoints > 2)
+            if (countPoints > 1)
             {
                 Point[] points = pointCollection.ToArray();
                 Line newLine = new Line(_a, _b);
-                //не проверяем на самопересечение 
-                for (int i = 0; i < pointCollection.Count - 2; i++)
+                Line linePolygon = new Line();
+
+                for (int i = 0; i < pointCollection.Count - 1; i++)
                 {
-                    if (newLine.intersect(points[i], points[i + 1]))
+                    linePolygon = new Line(points[i], points[i + 1]);
+                    if (newLine.intersect(linePolygon) || (linePolygon.hasPoint(_a) && linePolygon.hasPoint(_b)))
                     {
                         badLine = true;
                         break;

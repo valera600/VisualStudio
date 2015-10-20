@@ -415,16 +415,7 @@ namespace polygon
                 lines.Remove(lineAB);
                 lines.Remove(lineCD);
 
-                bool intersection = false;
-                foreach (Line line in lines)
-                {
-                    if (line.intersect(newLine))
-                    {
-                        intersection = true;
-                        break;
-                    }
-                }
-                if (!intersection)
+                if (!polygons[cur].isBadLine(newLine.a, newLine.b))
                 {
                     MessageBox.Show("Точка " + deletingPoint.ToString() + " успешно удалена");
                 }
