@@ -6,10 +6,14 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Serialization;
+using System.Xml;
+using System.Data.SqlTypes;
+using Microsoft.VisualBasic;
 
 namespace polygon
 {
@@ -511,7 +515,7 @@ namespace polygon
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.ToString());
             }
@@ -560,6 +564,52 @@ namespace polygon
             {
                 if (reader != null)
                     reader.Close();
+                if (myStream != null)
+                    myStream.Close();
+            }
+        }
+
+        private void btSaveToDB_Click(object sender, EventArgs e)
+        {
+            TextWriter writer = null;
+            MemoryStream myStream = null;
+            try
+            {
+                DatabaseDataSetTableAdapters.PolygonsTableAdapter adapter = new DatabaseDataSetTableAdapters.PolygonsTableAdapter();
+                //DatabaseDataSet.PolygonsDataTable table = new DatabaseDataSet.PolygonsDataTable();
+                //adapter.Fill(table);
+                //adapter.GetData();
+                
+                if (!polygons[currentPolygon].isBadPolygon())
+                {
+                    myStream = new MemoryStream();
+                    var serializer = new XmlSerializer(typeof(Polygon));
+                    writer = new StreamWriter(myStream);
+                    serializer.Serialize(writer, polygons[currentPolygon]);
+                    SqlXml newXml = new SqlXml(myStream);
+                    string name = null;
+                    do
+                    {
+                        name = Interaction.InputBox("Введите имя полигона:", "Имя полигона", "Имя полигона не может быть пустым");
+                    } while (name == "");
+                    if (adapter.Insert(name, newXml) == 1)
+                        MessageBox.Show("Полигон добавлен в БД!");
+                    else
+                        MessageBox.Show("Ошибка добавления полигона!");
+                }
+                else
+                {
+                    MessageBox.Show("Текущий полигон не может быть добавлен в БД, т.к. содержит плохие точки!");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+            finally
+            {
+                if (writer != null)
+                    writer.Close();
                 if (myStream != null)
                     myStream.Close();
             }

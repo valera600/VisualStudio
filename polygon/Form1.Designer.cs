@@ -58,6 +58,7 @@
             this.lbPolygon2 = new System.Windows.Forms.Label();
             this.lbWorkSpace = new System.Windows.Forms.Label();
             this.gbPolygons = new System.Windows.Forms.GroupBox();
+            this.btSaveToDB = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.workSpace)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbUnion)).BeginInit();
             this.gbRadioButton.SuspendLayout();
@@ -338,11 +339,22 @@
             this.gbPolygons.TabIndex = 24;
             this.gbPolygons.TabStop = false;
             // 
+            // btSaveToDB
+            // 
+            this.btSaveToDB.Location = new System.Drawing.Point(521, 49);
+            this.btSaveToDB.Name = "btSaveToDB";
+            this.btSaveToDB.Size = new System.Drawing.Size(147, 23);
+            this.btSaveToDB.TabIndex = 25;
+            this.btSaveToDB.Text = "Сохранить полигон в БД";
+            this.btSaveToDB.UseVisualStyleBackColor = true;
+            this.btSaveToDB.Click += new System.EventHandler(this.btSaveToDB_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1135, 514);
+            this.Controls.Add(this.btSaveToDB);
             this.Controls.Add(this.gbPolygons);
             this.Controls.Add(this.gbUnion);
             this.Controls.Add(this.btLoadFromFile);
@@ -403,6 +415,7 @@
         private System.Windows.Forms.Label lbPolygon2;
         private System.Windows.Forms.Label lbWorkSpace;
         private System.Windows.Forms.GroupBox gbPolygons;
+        private System.Windows.Forms.Button btSaveToDB;
     }
 }
 
